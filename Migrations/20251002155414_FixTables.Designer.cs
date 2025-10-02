@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RegistrarPonto.Data;
@@ -11,9 +12,11 @@ using RegistrarPonto.Data;
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251002155414_FixTables")]
+    partial class FixTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,12 +80,17 @@ namespace RegistrarPonto.Migrations
             modelBuilder.Entity("RegistrarPonto.Models.Marking", b =>
                 {
                     b.HasOne("RegistrarPonto.Models.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Markings")
                         .HasForeignKey("MatriculaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("RegistrarPonto.Models.Employee", b =>
+                {
+                    b.Navigation("Markings");
                 });
 #pragma warning restore 612, 618
         }

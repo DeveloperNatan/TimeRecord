@@ -1,26 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
 using RegistrarPonto.Data;
 using RegistrarPonto.Models;
+using RegistrarPonto.Services;
 
 namespace RegistrarPonto.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class EmployeesController : ControllerBase
+    [Route("api/[controller]")]
+    public class employeesController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly EmployeeService _employeeservice;
 
-        public EmployeesController(AppDbContext appDbContext)
+        public employeesController(EmployeeService employeeservice)
         {
-            _appDbContext = appDbContext;
+            _employeeservice = employeeservice;
         }
 
         [HttpPost]
-        public Task<IActionResult> CreateUser(Employee employee)
+        public async Task<IActionResult> CreateUser(Employee employee)
         {
-            var result = _appDbContext.Employees.Add(employee);
+            var CreateUserService = await _employeeservice.Register(employee);
+            return Ok(CreateUserService);
+        }
 
-            return result;
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EmployeeService>>> FindAllUser(Employee employee)
+        {
+            var FindUserService = await _employeeservice.Find(employee);
         }
     }
 }

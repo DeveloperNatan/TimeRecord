@@ -12,19 +12,16 @@ namespace RegistrarPonto.Models
 
         [Required]
         [MinLength(2)]
-        [MaxLength(10)]
+        [MaxLength(100)]
         public string Nome { get; set; }
 
         [Required]
         [MinLength(2)]
-        [MaxLength(10)]
+        [MaxLength(100)]
         public string Cargo { get; set; }
 
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
-        // Relacionamento 1:N
-        public ICollection<Marking> Markings { get; set; }
     }
 }

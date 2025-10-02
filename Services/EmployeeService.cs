@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using RegistrarPonto.Data;
 using RegistrarPonto.Models;
 
@@ -9,17 +5,18 @@ namespace RegistrarPonto.Services
 {
     public class EmployeeService
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _appdbcontext;
 
-        public EmployeeService(AppDbContext context)
+        public EmployeeService(AppDbContext appdbcontext)
         {
-            _context = context;
+            _appdbcontext = appdbcontext;
         }
 
-        public async IEnumerable<Employee> Register()
+        public async Task<Employee> Register(Employee employee)
         {
-            var result = 
-            await _app
+            var result = _appdbcontext.Employees.Add(employee);
+            await _appdbcontext.SaveChangesAsync();
+            return result.Entity;
         }
     }
 }
