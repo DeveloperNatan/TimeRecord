@@ -19,6 +19,6 @@ namespace RegistrarPonto.Models
         public string MarkingType { get; set; }
 
         // Navegação para o funcionário
-        public Employee Employee { get; set; }
+        // public Employee Employee { get; set; }
     }
 }

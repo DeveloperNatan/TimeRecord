@@ -24,9 +24,24 @@ namespace RegistrarPonto.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeService>>> FindAllUser(Employee employee)
+        public async Task<IActionResult> FindAllUser()
         {
-            var FindUserService = await _employeeservice.Find(employee);
+            var FindUserService = await _employeeservice.FindAll();
+            return Ok(FindUserService);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FindOneUser(int id)
+        {
+            var FindOneUserService = await _employeeservice.FindOne(id);
+            return Ok(FindOneUserService);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var DeleteOneUserService = await _employeeservice.Delete(id);
+            return Ok(DeleteOneUserService);
         }
     }
 }

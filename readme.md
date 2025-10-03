@@ -13,3 +13,7 @@ criar migrations
 "ConnectionStrings": {
 "DefaultConnection": "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=123456;SSL Mode=Disable;Trust Server Certificate=true"
 }
+//empresa
+"ConnectionStrings": {
+"DefaultConnection": "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=amnesia;SSL Mode=Disable;Trust Server Certificate=true"
+}

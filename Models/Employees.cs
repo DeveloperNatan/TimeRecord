@@ -23,5 +23,8 @@ namespace RegistrarPonto.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        // Relacionamento 1:N → um Employee tem várias marcações
+        // public ICollection<Marking> Markings { get; set; } = new List<Marking>();
     }
 }

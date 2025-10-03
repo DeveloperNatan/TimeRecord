@@ -264,3 +264,4 @@ C:\Users\10174\TimeRecord\obj\Debug\net9.0\staticwebassets.build.endpoints.json
 C:\Users\10174\TimeRecord\obj\Debug\net9.0\Registra.8370634A.Up2Date
 C:\Users\10174\TimeRecord\obj\Debug\net9.0\RegistrarPonto.genruntimeconfig.cache
 C:\Users\10174\TimeRecord\obj\Debug\net9.0\ref\RegistrarPonto.dll
+C:\Users\natan\RegistrarPonto\obj\Debug\net9.0\RegistrarPonto.sourcelink.json
