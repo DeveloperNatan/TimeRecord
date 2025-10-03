@@ -19,7 +19,7 @@ namespace RegistrarPonto.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(Employee employee)
         {
-            var CreateUserService = await _employeeservice.Register(employee);
+            var CreateUserService = await _employeeservice.Post(employee);
             return Ok(CreateUserService);
         }
 
@@ -42,6 +42,13 @@ namespace RegistrarPonto.Controllers
         {
             var DeleteOneUserService = await _employeeservice.Delete(id);
             return Ok(DeleteOneUserService);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] Employee employee)
+        {
+            var UpdateOneUserService = await _employeeservice.Update(id, employee);
+            return Ok(UpdateOneUserService);
         }
     }
 }
