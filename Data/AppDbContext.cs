@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using RegistrarPonto.Models;
+using TimeRecord.Models;
 
-namespace RegistrarPonto.Data
+namespace TimeRecord.Data
 {
     public class AppDbContext : DbContext
     {

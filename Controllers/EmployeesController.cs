@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using RegistrarPonto.Data;
-using RegistrarPonto.Models;
-using RegistrarPonto.Services;
+using TimeRecord.Models;
+using TimeRecord.Services;
 
-namespace RegistrarPonto.Controllers
+namespace TimeRecord.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

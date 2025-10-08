@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using RegistrarPonto.Data;
+using TimeRecord.Data;
 
 #nullable disable
 
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251002015743_InitialCreate")]
+    [Migration("20251007212813_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace RegistrarPonto.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("RegistrarPonto.Models.Employee", b =>
+            modelBuilder.Entity("TimeRecord.Models.Employee", b =>
                 {
                     b.Property<int>("MatriculaId")
                         .ValueGeneratedOnAdd()
@@ -35,8 +35,8 @@ namespace RegistrarPonto.Migrations
 
                     b.Property<string>("Cargo")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -44,15 +44,15 @@ namespace RegistrarPonto.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("MatriculaId");
 
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("RegistrarPonto.Models.Marking", b =>
+            modelBuilder.Entity("TimeRecord.Models.Marking", b =>
                 {
                     b.Property<int>("PontoId")
                         .ValueGeneratedOnAdd()
@@ -72,25 +72,7 @@ namespace RegistrarPonto.Migrations
 
                     b.HasKey("PontoId");
 
-                    b.HasIndex("MatriculaId");
-
                     b.ToTable("Markings");
-                });
-
-            modelBuilder.Entity("RegistrarPonto.Models.Marking", b =>
-                {
-                    b.HasOne("RegistrarPonto.Models.Employee", "Employee")
-                        .WithMany("Markings")
-                        .HasForeignKey("MatriculaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("RegistrarPonto.Models.Employee", b =>
-                {
-                    b.Navigation("Markings");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using RegistrarPonto.Data;
-using RegistrarPonto.Services;
+using TimeRecord.Data;
+using TimeRecord.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+// inejtar dependencias
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<MarkingsService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

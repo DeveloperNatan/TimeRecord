@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using RegistrarPonto.Data;
+using TimeRecord.Data;
 
 #nullable disable
 
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251002214816_RemoveRelations")]
-    partial class RemoveRelations
+    [Migration("20251007214021_RemoveForeignKey")]
+    partial class RemoveForeignKey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace RegistrarPonto.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("RegistrarPonto.Models.Employee", b =>
+            modelBuilder.Entity("TimeRecord.Models.Employee", b =>
                 {
                     b.Property<int>("MatriculaId")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace RegistrarPonto.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("RegistrarPonto.Models.Marking", b =>
+            modelBuilder.Entity("TimeRecord.Models.Marking", b =>
                 {
                     b.Property<int>("PontoId")
                         .ValueGeneratedOnAdd()

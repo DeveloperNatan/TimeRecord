@@ -1,0 +1,15 @@
+# Pastas de build
+bin/
+obj/
+
+# Configurações de IDE
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.user
+*.log
+
+# Publicação
+publish/
+out/

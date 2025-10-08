@@ -17,3 +17,8 @@ criar migrations
 "ConnectionStrings": {
 "DefaultConnection": "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=amnesia;SSL Mode=Disable;Trust Server Certificate=true"
 }
+
+puxar projeto
+dotnet restore
+dotnet build
+dotnet run

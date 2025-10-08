@@ -18,8 +18,8 @@ namespace RegistrarPonto.Migrations
                 {
                     MatriculaId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nome = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Cargo = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Cargo = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -40,28 +40,17 @@ namespace RegistrarPonto.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Markings", x => x.PontoId);
-                    table.ForeignKey(
-                        name: "FK_Markings_Employees_MatriculaId",
-                        column: x => x.MatriculaId,
-                        principalTable: "Employees",
-                        principalColumn: "MatriculaId",
-                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Markings_MatriculaId",
-                table: "Markings",
-                column: "MatriculaId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Markings");
+                name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "Markings");
         }
     }
 }

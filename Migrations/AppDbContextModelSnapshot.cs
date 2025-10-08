@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using RegistrarPonto.Data;
+using TimeRecord.Data;
 
 #nullable disable
 
@@ -22,7 +22,7 @@ namespace RegistrarPonto.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("RegistrarPonto.Models.Employee", b =>
+            modelBuilder.Entity("TimeRecord.Models.Employee", b =>
                 {
                     b.Property<int>("MatriculaId")
                         .ValueGeneratedOnAdd()
@@ -49,7 +49,7 @@ namespace RegistrarPonto.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("RegistrarPonto.Models.Marking", b =>
+            modelBuilder.Entity("TimeRecord.Models.Marking", b =>
                 {
                     b.Property<int>("PontoId")
                         .ValueGeneratedOnAdd()

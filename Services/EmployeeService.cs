@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RegistrarPonto.Data;
-using RegistrarPonto.Models;
+using TimeRecord.Data;
+using TimeRecord.Models;
 
-namespace RegistrarPonto.Services
+namespace TimeRecord.Services
 {
     public class EmployeeService
     {

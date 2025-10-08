@@ -5,7 +5,7 @@
 namespace RegistrarPonto.Migrations
 {
     /// <inheritdoc />
-    public partial class Remove1N : Migration
+    public partial class RemoveForeignKey : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

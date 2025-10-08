@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RegistrarPonto.Models
+namespace TimeRecord.Models
 {
     public class Marking
     {
         [Key]
         public int PontoId { get; set; }
 
-        [ForeignKey("Employee")]
+        // [ForeignKey("Employee")]
         public int MatriculaId { get; set; }
 
         public DateTime Timestamp { get; set; }
