@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
@@ -17,8 +18,15 @@ namespace TimeRecord.Services
         public async Task<Marking> Post(Marking marking)
         {
             var CreateTime = _appdbcontext.Markings.Add(marking);
-            await _appdbcontext.SaveChangesAsync();
-            return CreateTime.Entity;
+            try
+            {
+                await _appdbcontext.SaveChangesAsync();
+                return CreateTime.Entity;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao tentar criar ", ex);
+            }
         }
 
         public async Task<IEnumerable<Marking>> Find()
@@ -33,12 +41,22 @@ namespace TimeRecord.Services
             return FindTime;
         }
 
-        public async Task<Marking> Delete(int id)
+        public async Task<Marking> DeleteOne(int id)
         {
             var DeleteTime = await _appdbcontext.Markings.FindAsync(id);
             _appdbcontext.Remove(DeleteTime);
             await _appdbcontext.SaveChangesAsync();
             return DeleteTime;
+        }
+
+        public async Task<Marking> UpdateOne(Marking marking, int id)
+        {
+            var obj = await _appdbcontext.Markings.FindAsync(id);
+            obj.Timestamp = marking.Timestamp;
+            obj.MarkingType = marking.MarkingType;
+
+            await _appdbcontext.SaveChangesAsync();
+            return obj;
         }
     }
 }
