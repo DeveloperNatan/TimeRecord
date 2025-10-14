@@ -20,41 +20,69 @@ namespace TimeRecord.Controllers
         {
             try
             {
-                var CreateMarking = await _markingsService.Post(markings);
-                return StatusCode(201);
+                await _markingsService.Post(markings);
+                return Ok("Sucesso ao criar marcação.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message);
+                return BadRequest("Erro ao tentar criar registro.");
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> FindAll()
         {
-            var FindMarking = await _markingsService.Find();
-            return Ok(FindMarking);
+            try
+            {
+                var Markings = await _markingsService.Find();
+                return Ok(Markings);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao encontrar marcações.");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Find(int id)
         {
-            var FindOneMarking = await _markingsService.FindOne(id);
-            return Ok(FindOneMarking);
+            try
+            {
+                var OneMarking = await _markingsService.FindOne(id);
+                return Ok(OneMarking);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao encontrar marcação.");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var DeleteMarking = await _markingsService.DeleteOne(id);
-            return Ok(DeleteMarking);
+            try
+            {
+                await _markingsService.DeleteOne(id);
+                return Ok("Sucesso ao excluir marcação.");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao excluir marcação. ");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Marking marking, int id)
         {
-            var UpdateMarking = await _markingsService.UpdateOne(marking, id);
-            return Ok(UpdateMarking);
+            try
+            {
+                await _markingsService.UpdateOne(marking, id);
+                return Ok("Sucesso ao editar marcação.");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Errp ao ediatr marcação.");
+            }
         }
     }
 }

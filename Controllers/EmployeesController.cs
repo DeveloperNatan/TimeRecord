@@ -18,36 +18,71 @@ namespace TimeRecord.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(Employee employee)
         {
-            var CreateUserService = await _employeeservice.Post(employee);
-            return Ok(CreateUserService);
+            try
+            {
+                await _employeeservice.Post(employee);
+                return Ok("Usuario criado com sucesso.");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao criar usuario.");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> FindAllUser()
         {
-            var FindUserService = await _employeeservice.FindAll();
-            return Ok(FindUserService);
+            try
+            {
+                var users = await _employeeservice.FindAll();
+                return Ok(users);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao buscar usuarios.");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> FindOneUser(int id)
         {
-            var FindOneUserService = await _employeeservice.FindOne(id);
-            return Ok(FindOneUserService);
+            try
+            {
+                var user = await _employeeservice.FindOne(id);
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao buscar usuario.");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var DeleteOneUserService = await _employeeservice.Delete(id);
-            return Ok(DeleteOneUserService);
+            try
+            {
+                await _employeeservice.Delete(id);
+                return Ok("Usuario excluido com sucesso.");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao excluir usuario.");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] Employee employee)
+        public async Task<IActionResult> UpdateUser(Employee employee, int id)
         {
-            var UpdateOneUserService = await _employeeservice.Update(id, employee);
-            return Ok(UpdateOneUserService);
+            try
+            {
+                await _employeeservice.Update(employee, id);
+                return Ok("Usuario editado com sucesso.");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao editar usuario.");
+            }
         }
     }
 }

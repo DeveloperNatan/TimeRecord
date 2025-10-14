@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
 using TimeRecord.Models;
@@ -23,40 +21,67 @@ namespace TimeRecord.Services
                 await _appdbcontext.SaveChangesAsync();
                 return CreateTime.Entity;
             }
-            catch (Exception ex)
+            catch (Exception Error)
             {
-                throw new Exception("Erro ao tentar criar ", ex);
+                throw new Exception(Error.Message);
             }
         }
 
         public async Task<IEnumerable<Marking>> Find()
         {
             var FindAllTime = await _appdbcontext.Markings.ToListAsync();
-            return FindAllTime;
+            try
+            {
+                return FindAllTime;
+            }
+            catch (Exception Error)
+            {
+                throw new Exception(Error.Message);
+            }
         }
 
         public async Task<Marking> FindOne(int id)
         {
             var FindTime = await _appdbcontext.Markings.FindAsync(id);
-            return FindTime;
+            try
+            {
+                return FindTime;
+            }
+            catch (Exception Error)
+            {
+                throw new Exception(Error.Message);
+            }
         }
 
         public async Task<Marking> DeleteOne(int id)
         {
             var DeleteTime = await _appdbcontext.Markings.FindAsync(id);
-            _appdbcontext.Remove(DeleteTime);
-            await _appdbcontext.SaveChangesAsync();
-            return DeleteTime;
+            try
+            {
+                _appdbcontext.Remove(DeleteTime);
+                await _appdbcontext.SaveChangesAsync();
+                return DeleteTime;
+            }
+            catch (Exception Error)
+            {
+                throw new Exception(Error.Message);
+            }
         }
 
         public async Task<Marking> UpdateOne(Marking marking, int id)
         {
-            var obj = await _appdbcontext.Markings.FindAsync(id);
-            obj.Timestamp = marking.Timestamp;
-            obj.MarkingType = marking.MarkingType;
-
-            await _appdbcontext.SaveChangesAsync();
-            return obj;
+            var UpdateTime = await _appdbcontext.Markings.FindAsync(id);
+            try
+            {
+                UpdateTime.Timestamp = marking.Timestamp;
+                UpdateTime.MarkingType = marking.MarkingType;
+                await _appdbcontext.SaveChangesAsync();
+                return UpdateTime;
+            }
+            catch (Exception Error)
+            {
+                throw new Exception(Error.Message);
+            }
         }
     }
 }
