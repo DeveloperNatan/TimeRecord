@@ -7,16 +7,8 @@ Instalar dependencias
 
 criar migrations
 1 - dotnet ef migrations add InitialCreate
-2 - dotnet ef database update
+2 - dontet ef database update
 
-//em casa
-"ConnectionStrings": {
-"DefaultConnection": "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=123456;SSL Mode=Disable;Trust Server Certificate=true"
-}
-//empresa
-"ConnectionStrings": {
-"DefaultConnection": "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=amnesia;SSL Mode=Disable;Trust Server Certificate=true"
-}
 
 puxar projeto
 dotnet restore

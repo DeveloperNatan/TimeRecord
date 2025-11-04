@@ -1,15 +1,51 @@
-# Pastas de build
+# Compilação
 bin/
 obj/
+out/
+publish/
+TestResults/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
 
 # Configurações de IDE
 .vscode/
 .idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
 # Arquivos temporários
-*.user
-*.log
+*.tmp
+*.temp
+*.swp
+*.bak
 
-# Publicação
-publish/
-out/
+# Configurações locais do Visual Studio / Rider
+*.vs/
+*.ncrunch*
+*.localhistory/
+_ReSharper*/
+*.DotSettings.user
+
+# Pacotes NuGet e dependências
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Arquivos de build do MSBuild
+*.Build.CsprojAssemblyReference.cache
+
+# Configurações e dados de debug
+*.launchSettings.json
+
+# Outros
+node_modules/
+dist/
+.env

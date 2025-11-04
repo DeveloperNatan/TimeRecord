@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TimeRecord.Controllers;
 using TimeRecord.Data;
 using TimeRecord.Models;
 
@@ -18,12 +17,11 @@ namespace TimeRecord.Services
 
         public async Task<Employee> Post(Employee employee)
         {
-            employee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
-            _appdbcontext.Employees.Add(employee);
+            var CreateEmployee = _appdbcontext.Employees.Add(employee);
             try
             {
                 await _appdbcontext.SaveChangesAsync();
-                return employee;
+                return CreateEmployee.Entity;
             }
             catch (Exception)
             {
@@ -72,6 +70,7 @@ namespace TimeRecord.Services
             }
         }
 
+        // Set of select values
         public async Task<Employee> Update(Employee employee, int id)
         {
             var UserUpdate = await _appdbcontext.Employees.FindAsync(id);
@@ -90,15 +89,15 @@ namespace TimeRecord.Services
             }
         }
 
-        public async Task<Employee> FindEmail(string email)
-        {
-            var user = await _appdbcontext.Employees.FirstOrDefaultAsync(u => u.Email == email);
-            return user;
-        }
+        //Set of all values
+        // public async Task<Employee> Update(int id, [FromBody] Employee employeCurrent)
+        // {
+        //     var CurrentUser = await _appdbcontext.Employees.FindAsync(id);
 
-        public bool VerifyPassword(Employee user, string senha)
-        {
-            return BCrypt.Net.BCrypt.Verify(senha, user.Senha);
-        }
+        //     _appdbcontext.Entry(CurrentUser).CurrentValues.SetValues(employeCurrent);
+
+        //     await _appdbcontext.SaveChangesAsync();
+        //     return CurrentUser;
+        // }
     }
 }

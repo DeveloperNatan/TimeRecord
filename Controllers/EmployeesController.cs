@@ -29,29 +29,6 @@ namespace TimeRecord.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO login)
-        {
-            try
-            {
-                var user = await _employeeservice.FindEmail(login.Email);
-                if (user == null)
-                {
-                    return NotFound("Usuário não encontrado");
-                }
-                if (!_employeeservice.VerifyPassword(user, login.Senha))
-                {
-                    return Unauthorized("Senha incorreta");
-                }
-                user.Senha = null;
-                return Ok(user);
-            }
-            catch (Exception)
-            {
-                return NotFound("Nenhum usuario foi encontrado");
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> FindAllUser()
         {
