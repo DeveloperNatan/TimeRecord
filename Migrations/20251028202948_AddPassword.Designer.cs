@@ -12,8 +12,8 @@ using TimeRecord.Data;
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251007214021_RemoveForeignKey")]
-    partial class RemoveForeignKey
+    [Migration("20251028202948_AddPassword")]
+    partial class AddPassword
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,6 +43,11 @@ namespace RegistrarPonto.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Senha")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");

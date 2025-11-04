@@ -7,7 +7,7 @@ Instalar dependencias
 
 criar migrations
 1 - dotnet ef migrations add InitialCreate
-2 - dontet ef database update
+2 - dotnet ef database update
 
 //em casa
 "ConnectionStrings": {

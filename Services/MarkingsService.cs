@@ -13,8 +13,14 @@ namespace TimeRecord.Services
             _appdbcontext = appcontext;
         }
 
-        public async Task<Marking> Post(Marking marking)
+        public async Task<Marking> Post(Marking req)
         {
+            var marking = new Marking
+            {
+                MatriculaId = req.MatriculaId,
+                Timestamp = DateTime.UtcNow,
+                MarkingType = req.MarkingType,
+            };
             var CreateTime = _appdbcontext.Markings.Add(marking);
             try
             {

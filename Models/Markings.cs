@@ -13,7 +13,6 @@ namespace TimeRecord.Models
 
         public DateTime Timestamp { get; set; }
 
-        [Required]
         public string MarkingType { get; set; }
 
         // Navegação para o funcionário

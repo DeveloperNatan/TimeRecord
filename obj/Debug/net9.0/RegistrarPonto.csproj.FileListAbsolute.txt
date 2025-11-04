@@ -399,3 +399,4 @@ C:\Users\natan\TimeRecord\obj\Debug\net9.0\staticwebassets.build.endpoints.json
 C:\Users\natan\TimeRecord\obj\Debug\net9.0\Registra.8370634A.Up2Date
 C:\Users\natan\TimeRecord\obj\Debug\net9.0\RegistrarPonto.genruntimeconfig.cache
 C:\Users\natan\TimeRecord\obj\Debug\net9.0\ref\RegistrarPonto.dll
+C:\Users\natan\TimeRecord\bin\Debug\net9.0\BCrypt.Net-Next.dll

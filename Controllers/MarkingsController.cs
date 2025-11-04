@@ -16,11 +16,11 @@ namespace TimeRecord.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(Marking markings)
+        public async Task<IActionResult> CreateMarking([FromBody] Marking req)
         {
             try
             {
-                await _markingsService.Post(markings);
+                await _markingsService.Post(req);
                 return Ok("Sucesso ao criar marcação.");
             }
             catch (Exception)
@@ -81,7 +81,7 @@ namespace TimeRecord.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Errp ao ediatr marcação.");
+                return BadRequest("Erro ao ediatr marcação.");
             }
         }
     }

@@ -44,6 +44,11 @@ namespace RegistrarPonto.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.HasKey("MatriculaId");
 
                     b.ToTable("Employees");

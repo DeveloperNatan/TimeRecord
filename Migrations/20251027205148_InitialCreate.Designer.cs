@@ -12,7 +12,7 @@ using TimeRecord.Data;
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251007212813_InitialCreate")]
+    [Migration("20251027205148_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -61,7 +61,6 @@ namespace RegistrarPonto.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PontoId"));
 
                     b.Property<string>("MarkingType")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MatriculaId")
