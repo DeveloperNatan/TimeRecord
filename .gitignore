@@ -1,14 +1,8 @@
-# Compilação
 bin/
 obj/
-out/
-publish/
-TestResults/
-*.dll
-*.exe
-*.pdb
-*.cache
-*.log
+*.user
+*.vs/
+*.suo
 
 # Configurações de IDE
 .vscode/
