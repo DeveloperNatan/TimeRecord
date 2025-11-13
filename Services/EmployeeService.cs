@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TimeRecord.Controllers;
 using TimeRecord.Data;
 using TimeRecord.Models;
+using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
@@ -18,17 +16,13 @@ namespace TimeRecord.Services
 
         public async Task<Employee> Post(Employee employee)
         {
+            EmployeeValidator.Validate(employee);
             employee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
+
             _appdbcontext.Employees.Add(employee);
-            try
-            {
-                await _appdbcontext.SaveChangesAsync();
-                return employee;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+
+            await _appdbcontext.SaveChangesAsync();
+            return employee;
         }
 
         public async Task<IEnumerable<Employee>> FindAll()
@@ -90,15 +84,44 @@ namespace TimeRecord.Services
             }
         }
 
-        public async Task<Employee> FindEmail(string email)
+        // finalizado, regras de negocio ok e DTO ok
+        public async Task<EmployeeResponseDTO> Authenticate(string email, string senha)
         {
             var user = await _appdbcontext.Employees.FirstOrDefaultAsync(u => u.Email == email);
-            return user;
+            if (user == null)
+            {
+                throw new KeyNotFoundException("Usuario não encontrado!");
+            }
+
+            bool VerifyPassword(string SenhaDigitada)
+            {
+                return BCrypt.Net.BCrypt.Verify(SenhaDigitada, user.Senha);
+            }
+
+            if (!VerifyPassword(senha))
+            {
+                throw new UnauthorizedAccessException("Senha incorreta!");
+            }
+            return new EmployeeResponseDTO
+            {
+                MatriculaId = user.MatriculaId,
+                Nome = user.Nome,
+                Cargo = user.Cargo,
+            };
         }
 
-        public bool VerifyPassword(Employee user, string senha)
+        public async Task<IEnumerable<Marking>> FindMarkingsUser(int id)
         {
-            return BCrypt.Net.BCrypt.Verify(senha, user.Senha);
+            var user = await _appdbcontext.Employees.FindAsync(id);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("Usuario não encontrado!");
+            }
+            var markings = await _appdbcontext
+                .Markings.Where(m => m.MatriculaId == id)
+                .ToListAsync();
+
+            return markings;
         }
     }
 }

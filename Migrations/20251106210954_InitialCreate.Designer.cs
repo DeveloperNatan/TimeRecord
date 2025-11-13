@@ -12,8 +12,8 @@ using TimeRecord.Data;
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251028202948_AddPassword")]
-    partial class AddPassword
+    [Migration("20251106210954_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,6 @@ namespace RegistrarPonto.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PontoId"));
 
                     b.Property<string>("MarkingType")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MatriculaId")

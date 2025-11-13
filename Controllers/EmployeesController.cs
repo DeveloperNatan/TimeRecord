@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.Models;
 using TimeRecord.Services;
@@ -21,34 +22,26 @@ namespace TimeRecord.Controllers
             try
             {
                 await _employeeservice.Post(employee);
-                return Ok("Usuario criado com sucesso.");
+                return Ok(employee);
             }
-            catch (Exception)
+            catch (ValidationException error)
             {
-                return BadRequest("Erro ao criar usuario.");
+                return BadRequest(error.Message);
             }
         }
 
+        //finalizado
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO login)
+        public async Task<IActionResult> AuthenticateLogin(LoginDTO login)
         {
             try
             {
-                var user = await _employeeservice.FindEmail(login.Email);
-                if (user == null)
-                {
-                    return NotFound("Usuário não encontrado");
-                }
-                if (!_employeeservice.VerifyPassword(user, login.Senha))
-                {
-                    return Unauthorized("Senha incorreta");
-                }
-                user.Senha = null;
+                var user = await _employeeservice.Authenticate(login.Email, login.Senha);
                 return Ok(user);
             }
             catch (Exception)
             {
-                return NotFound("Nenhum usuario foi encontrado");
+                return Unauthorized("Credencias invalidas");
             }
         }
 
@@ -105,6 +98,24 @@ namespace TimeRecord.Controllers
             catch (Exception)
             {
                 return BadRequest("Erro ao editar usuario.");
+            }
+        }
+
+        [HttpGet("{id}/markings")]
+        public async Task<IActionResult> MarkingsUser(int id)
+        {
+            try
+            {
+                var Markings = await _employeeservice.FindMarkingsUser(id);
+                return Ok(Markings);
+            }
+            catch (KeyNotFoundException error)
+            {
+                return NotFound(error.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Erro interno no servidor");
             }
         }
     }

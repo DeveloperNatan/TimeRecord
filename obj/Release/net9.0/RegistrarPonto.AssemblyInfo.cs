@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RegistrarPonto")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56328d7df39bec954015a86e965b9dd1a65cbfef")]
 [assembly: System.Reflection.AssemblyProductAttribute("RegistrarPonto")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RegistrarPonto")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

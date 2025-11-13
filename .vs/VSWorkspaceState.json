@@ -3,9 +3,8 @@
     "",
     "\\Controllers",
     "\\Data",
-    "\\Migrations",
-    "\\Models"
+    "\\Services"
   ],
-  "SelectedNode": "\\Controllers\\EmployeesController.cs",
+  "SelectedNode": "\\Services\\EmployeeService.cs",
   "PreviewInSolutionExplorer": false
 }

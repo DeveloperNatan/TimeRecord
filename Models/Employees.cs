@@ -27,7 +27,5 @@ namespace TimeRecord.Models
         [MinLength(2)]
         [MaxLength(100)]
         public string Senha { get; set; }
-        // Relacionamento 1:N → um Employee tem várias marcações
-        // public ICollection<Marking> Markings { get; set; } = new List<Marking>();
     }
 }

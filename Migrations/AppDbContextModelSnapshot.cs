@@ -63,7 +63,6 @@ namespace RegistrarPonto.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PontoId"));
 
                     b.Property<string>("MarkingType")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MatriculaId")
