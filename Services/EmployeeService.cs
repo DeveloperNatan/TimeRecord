@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
 using TimeRecord.Models;
@@ -14,7 +15,7 @@ namespace TimeRecord.Services
             _appdbcontext = appdbcontext;
         }
 
-        public async Task<Employee> Post(Employee employee)
+        public async Task<EmployeeResponseDTO> Post(Employee employee)
         {
             EmployeeValidator.Validate(employee);
             employee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
@@ -22,69 +23,13 @@ namespace TimeRecord.Services
             _appdbcontext.Employees.Add(employee);
 
             await _appdbcontext.SaveChangesAsync();
-            return employee;
+            return new EmployeeResponseDTO
+            {
+                MatriculaId = employee.MatriculaId,
+                Nome = employee.Nome,
+            };
         }
 
-        public async Task<IEnumerable<Employee>> FindAll()
-        {
-            try
-            {
-                var UserAll = await _appdbcontext.Employees.ToListAsync();
-                return UserAll;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<Employee> FindOne(int id)
-        {
-            var User = await _appdbcontext.Employees.FindAsync(id);
-            try
-            {
-                return User;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<Employee> Delete(int id)
-        {
-            var UserDelete = await _appdbcontext.Employees.FindAsync(id);
-            try
-            {
-                _appdbcontext.Remove(UserDelete);
-                await _appdbcontext.SaveChangesAsync();
-                return UserDelete;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<Employee> Update(Employee employee, int id)
-        {
-            var UserUpdate = await _appdbcontext.Employees.FindAsync(id);
-            try
-            {
-                UserUpdate.Nome = employee.Nome;
-                UserUpdate.Cargo = employee.Cargo;
-                UserUpdate.Email = employee.Email;
-                _appdbcontext.Update(UserUpdate);
-                await _appdbcontext.SaveChangesAsync();
-                return UserUpdate;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        // finalizado, regras de negocio ok e DTO ok
         public async Task<EmployeeResponseDTO> Authenticate(string email, string senha)
         {
             var user = await _appdbcontext.Employees.FirstOrDefaultAsync(u => u.Email == email);
@@ -110,6 +55,74 @@ namespace TimeRecord.Services
             };
         }
 
+        public async Task<IEnumerable<Employee>> FindAll()
+        {
+            var UserAll = await _appdbcontext.Employees.ToListAsync();
+            if (UserAll == null)
+            {
+                throw new Exception("Nenhum usuario encontrado!");
+            }
+            return UserAll;
+        }
+
+        public async Task<EmployeeResponseDTO> FindOne(int id)
+        {
+            var User = await _appdbcontext.Employees.FindAsync(id);
+            if (User == null)
+            {
+                throw new KeyNotFoundException("Usuario não encontrado!");
+            }
+            return new EmployeeResponseDTO
+            {
+                MatriculaId = User.MatriculaId,
+                Nome = User.Nome,
+                Cargo = User.Cargo,
+                Email = User.Email,
+            };
+        }
+
+        public async Task<EmployeeResponseDTO> Delete(int id)
+        {
+            var User = await _appdbcontext.Employees.FindAsync(id);
+            if (User == null)
+            {
+                throw new KeyNotFoundException("Usuario não encontrado!");
+            }
+            _appdbcontext.Remove(User);
+            await _appdbcontext.SaveChangesAsync();
+            return new EmployeeResponseDTO { MatriculaId = User.MatriculaId };
+        }
+
+        public async Task<EmployeeResponseDTO> Update(Employee employee, int id)
+        {
+            var user = await _appdbcontext
+                .Employees.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.MatriculaId == id);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException("Usuario não encontrado!");
+            }
+            EmployeeValidator.Validate(employee);
+            user.Nome = employee.Nome;
+            user.Cargo = employee.Cargo;
+            user.Email = employee.Email;
+
+            if (!string.IsNullOrWhiteSpace(employee.Senha))
+            {
+                user.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
+            }
+
+            await _appdbcontext.SaveChangesAsync();
+            return new EmployeeResponseDTO
+            {
+                MatriculaId = user.MatriculaId,
+                Nome = user.Nome,
+                Cargo = user.Cargo,
+                Email = user.Email,
+            };
+        }
+
         public async Task<IEnumerable<Marking>> FindMarkingsUser(int id)
         {
             var user = await _appdbcontext.Employees.FindAsync(id);
@@ -121,6 +134,10 @@ namespace TimeRecord.Services
                 .Markings.Where(m => m.MatriculaId == id)
                 .ToListAsync();
 
+            if (!markings.Any())
+            {
+                throw new Exception("Nenhum registro encontrado!");
+            }
             return markings;
         }
     }

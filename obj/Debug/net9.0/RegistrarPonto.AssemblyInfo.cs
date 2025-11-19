@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RegistrarPonto")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56328d7df39bec954015a86e965b9dd1a65cbfef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3aef1308f961c7e9ca392064025f19811271ae4a")]
 [assembly: System.Reflection.AssemblyProductAttribute("RegistrarPonto")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RegistrarPonto")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

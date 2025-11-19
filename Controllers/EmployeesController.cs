@@ -7,30 +7,29 @@ namespace TimeRecord.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class employeesController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         private readonly EmployeeService _employeeservice;
 
-        public employeesController(EmployeeService employeeservice)
+        public EmployeesController(EmployeeService employeeservice)
         {
             _employeeservice = employeeservice;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(Employee employee)
+        public async Task<IActionResult> CreateUser([FromBody] Employee employee)
         {
             try
             {
-                await _employeeservice.Post(employee);
-                return Ok(employee);
+                var user = await _employeeservice.Post(employee);
+                return Ok(user);
             }
             catch (ValidationException error)
             {
-                return BadRequest(error.Message);
+                return BadRequest(new { message = error.Message });
             }
         }
 
-        //finalizado
         [HttpPost("login")]
         public async Task<IActionResult> AuthenticateLogin(LoginDTO login)
         {
@@ -41,7 +40,7 @@ namespace TimeRecord.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized("Credencias invalidas");
+                return Unauthorized(new { message = "Credencias invalidas!" });
             }
         }
 
@@ -55,7 +54,7 @@ namespace TimeRecord.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Erro ao buscar usuarios.");
+                return BadRequest(new { message = "Erro interno ao buscar dados!" });
             }
         }
 
@@ -67,9 +66,13 @@ namespace TimeRecord.Controllers
                 var user = await _employeeservice.FindOne(id);
                 return Ok(user);
             }
+            catch (KeyNotFoundException error)
+            {
+                return NotFound(new { message = error.Message });
+            }
             catch (Exception)
             {
-                return BadRequest("Erro ao buscar usuario.");
+                return BadRequest(new { message = "Erro interno ao buscar usuario!" });
             }
         }
 
@@ -78,26 +81,41 @@ namespace TimeRecord.Controllers
         {
             try
             {
-                await _employeeservice.Delete(id);
-                return Ok("Usuario excluido com sucesso.");
+                var user = await _employeeservice.Delete(id);
+                return Ok(new { message = $"Usuario {user.MatriculaId} deletado!" });
+            }
+            catch (KeyNotFoundException error)
+            {
+                return NotFound(new { message = error.Message });
             }
             catch (Exception)
             {
-                return BadRequest("Erro ao excluir usuario.");
+                return BadRequest(new { message = "Erro ao excluir usuario." });
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Employee employee, int id)
+        public async Task<IActionResult> UpdateUser(
+            [FromBody] Employee employee,
+            [FromRoute] int id
+        )
         {
             try
             {
                 await _employeeservice.Update(employee, id);
-                return Ok("Usuario editado com sucesso.");
+                return Ok(new { message = "Usuario editado com sucesso." });
+            }
+            catch (KeyNotFoundException error)
+            {
+                return NotFound(new { message = error.Message });
+            }
+            catch (ValidationException error)
+            {
+                return BadRequest(new { message = error.Message });
             }
             catch (Exception)
             {
-                return BadRequest("Erro ao editar usuario.");
+                return BadRequest(new { message = "Erro ao editar usuario." });
             }
         }
 
@@ -111,11 +129,11 @@ namespace TimeRecord.Controllers
             }
             catch (KeyNotFoundException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new { message = error.Message });
             }
-            catch (Exception)
+            catch (Exception error)
             {
-                return StatusCode(500, "Erro interno no servidor");
+                return BadRequest(new { message = error.Message });
             }
         }
     }

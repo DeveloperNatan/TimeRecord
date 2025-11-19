@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeRecord.Models
 {
@@ -14,8 +13,5 @@ namespace TimeRecord.Models
         public DateTime Timestamp { get; set; }
 
         public string MarkingType { get; set; }
-
-        // Navegação para o funcionário
-        // public Employee Employee { get; set; }
     }
 }
