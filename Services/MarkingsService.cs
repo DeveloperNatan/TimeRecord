@@ -1,6 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
 using TimeRecord.Models;
+using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
@@ -13,81 +17,63 @@ namespace TimeRecord.Services
             _appdbcontext = appcontext;
         }
 
-        public async Task<Marking> Post(Marking req)
+        public async Task<Marking> Post(Marking marking)
         {
-            var marking = new Marking
+            var time = new Marking
             {
-                MatriculaId = req.MatriculaId,
+                MatriculaId = marking.MatriculaId,
                 Timestamp = DateTime.UtcNow,
-                MarkingType = req.MarkingType,
+                MarkingType = marking.MarkingType,
             };
-            var CreateTime = _appdbcontext.Markings.Add(marking);
-            try
-            {
-                await _appdbcontext.SaveChangesAsync();
-                return CreateTime.Entity;
-            }
-            catch (Exception Error)
-            {
-                throw new Exception(Error.Message);
-            }
+
+            MarkingValidator.Validate(time);
+            _appdbcontext.Markings.Add(time);
+            await _appdbcontext.SaveChangesAsync();
+            return time;
         }
 
         public async Task<IEnumerable<Marking>> Find()
         {
-            var FindAllTime = await _appdbcontext.Markings.ToListAsync();
-            try
+            var allTime = await _appdbcontext.Markings.ToListAsync();
+            if (allTime == null)
             {
-                return FindAllTime;
+                throw new ValidationException("Nenhuma marcação encontrada!");
             }
-            catch (Exception Error)
-            {
-                throw new Exception(Error.Message);
-            }
+            return allTime;
         }
 
         public async Task<Marking> FindOne(int id)
         {
-            var FindTime = await _appdbcontext.Markings.FindAsync(id);
-            try
+            var time = await _appdbcontext.Markings.FindAsync(id);
+            if (time == null)
             {
-                return FindTime;
+                throw new ValidationException("Nenhuma marcação encontrada!");
             }
-            catch (Exception Error)
-            {
-                throw new Exception(Error.Message);
-            }
+            return time;
         }
 
         public async Task<Marking> DeleteOne(int id)
         {
-            var DeleteTime = await _appdbcontext.Markings.FindAsync(id);
-            try
+            var time = await _appdbcontext.Markings.FindAsync(id);
+            if (time == null)
             {
-                _appdbcontext.Remove(DeleteTime);
-                await _appdbcontext.SaveChangesAsync();
-                return DeleteTime;
+                throw new ValidationException("Marcação não existe!");
             }
-            catch (Exception Error)
-            {
-                throw new Exception(Error.Message);
-            }
+            _appdbcontext.Remove(time);
+            await _appdbcontext.SaveChangesAsync();
+            return time;
         }
 
         public async Task<Marking> UpdateOne(Marking marking, int id)
         {
-            var UpdateTime = await _appdbcontext.Markings.FindAsync(id);
-            try
+            var time = await _appdbcontext.Markings.FindAsync(id);
+            if (time == null)
             {
-                UpdateTime.Timestamp = marking.Timestamp;
-                UpdateTime.MarkingType = marking.MarkingType;
-                await _appdbcontext.SaveChangesAsync();
-                return UpdateTime;
+                throw new ValidationException("Não é possivel atualizar marcação inexistente!");
             }
-            catch (Exception Error)
-            {
-                throw new Exception(Error.Message);
-            }
+
+            await _appdbcontext.SaveChangesAsync();
+            return time;
         }
     }
 }

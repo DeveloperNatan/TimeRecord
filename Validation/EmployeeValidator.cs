@@ -7,12 +7,12 @@ namespace TimeRecord.Validation
     {
         public static void Validate(Employee employee)
         {
-            if (string.IsNullOrWhiteSpace(employee.Nome) || employee.Nome == "string")
+            if (string.IsNullOrWhiteSpace(employee.Nome) || employee.Nome == "")
             {
                 throw new ValidationException("Digite nome valido!");
             }
 
-            if (string.IsNullOrWhiteSpace(employee.Cargo) || employee.Cargo == "string")
+            if (string.IsNullOrWhiteSpace(employee.Cargo) || employee.Cargo == "")
             {
                 throw new ValidationException("Digite um cargo valido!");
             }
@@ -21,7 +21,7 @@ namespace TimeRecord.Validation
             {
                 throw new ValidationException("Email invlaido");
             }
-            if (string.IsNullOrWhiteSpace(employee.Senha) || employee.Senha == "string")
+            if (string.IsNullOrWhiteSpace(employee.Senha) || employee.Senha == "")
             {
                 throw new ValidationException("Senha invalida");
             }

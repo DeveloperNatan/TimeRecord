@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.Models;
 using TimeRecord.Services;
@@ -20,12 +21,12 @@ namespace TimeRecord.Controllers
         {
             try
             {
-                await _markingsService.Post(req);
-                return Ok("Sucesso ao criar marcação.");
+                var marking = await _markingsService.Post(req);
+                return Ok(marking);
             }
-            catch (Exception)
+            catch (ValidationException error)
             {
-                return BadRequest("Erro ao tentar criar registro.");
+                return BadRequest(error.Message);
             }
         }
 
@@ -37,9 +38,9 @@ namespace TimeRecord.Controllers
                 var Markings = await _markingsService.Find();
                 return Ok(Markings);
             }
-            catch (Exception)
+            catch (ValidationException error)
             {
-                return BadRequest("Erro ao encontrar marcações.");
+                return BadRequest(error.Message);
             }
         }
 
@@ -51,9 +52,9 @@ namespace TimeRecord.Controllers
                 var OneMarking = await _markingsService.FindOne(id);
                 return Ok(OneMarking);
             }
-            catch (Exception)
+            catch (ValidationException error)
             {
-                return BadRequest("Erro ao encontrar marcação.");
+                return BadRequest(error.Message);
             }
         }
 
@@ -65,9 +66,9 @@ namespace TimeRecord.Controllers
                 await _markingsService.DeleteOne(id);
                 return Ok("Sucesso ao excluir marcação.");
             }
-            catch (Exception)
+            catch (ValidationException error)
             {
-                return BadRequest("Erro ao excluir marcação. ");
+                return BadRequest(error.Message);
             }
         }
 
@@ -76,12 +77,12 @@ namespace TimeRecord.Controllers
         {
             try
             {
-                await _markingsService.UpdateOne(marking, id);
-                return Ok("Sucesso ao editar marcação.");
+                var time = await _markingsService.UpdateOne(marking, id);
+                return Ok(time);
             }
-            catch (Exception)
+            catch (ValidationException error)
             {
-                return BadRequest("Erro ao ediatr marcação.");
+                return BadRequest(error.Message);
             }
         }
     }
