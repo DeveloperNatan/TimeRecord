@@ -1,4 +1,4 @@
-Backend do Ponto Fácil
+⌚Backend do Ponto Fácil
 
 API REST para registro e gestão de ponto de funcionários, utilizada pelo frontend Ponto Fácil.
 Tecnologias
