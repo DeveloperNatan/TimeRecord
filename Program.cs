@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("https://ponto-facil-znka.onrender.com")
+                .WithOrigins("https://ponto-facil-znka.onrender.com", "http://localhost:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
