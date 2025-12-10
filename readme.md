@@ -1,38 +1,35 @@
-⌚Backend do Ponto Fácil
+⌚ Backend do Ponto Fácil
 
 API REST para registro e gestão de ponto de funcionários, utilizada pelo frontend Ponto Fácil.
-Tecnologias
 
-    .NET 9 (ASP.NET Core Web API)
+### Tecnologias
 
-    C#
+- .NET 9 (ASP.NET Core Web API)
+- C#
+- Entity Framework Core
+- PostgreSQL (Neon)
+- Docker
 
-    Entity Framework Core
+### Funcionalidades
 
-    PostgreSQL (Neon)
+- CRUD de funcionários
+- Registro de marcações de ponto
+- Consulta de histórico de marcações por funcionário
+- Integração com o frontend Ponto Fácil (Next.js)
 
-    Docker
-
-Funcionalidades
-
-    CRUD de funcionários
-
-    Registro de marcações de ponto
-
-    Consulta de histórico de marcações por funcionário
-
-    Integração com o frontend (Next.js) do Ponto Fácil
-
-Documentação da API (Swagger)
+### Documentação da API (Swagger)
 
 A API expõe documentação interativa via Swagger, com todos os endpoints, modelos e exemplos de requisição/resposta.
 
-    Produção:
-    https://timerecord-gymv.onrender.com/swagger/index.html
+- Produção: https://timerecord-gymv.onrender.com/swagger/index.html
 
+### Deploy
 
-Deploy
+- Hospedado na Render como serviço Web API
+- Utilizado como backend pelo frontend Ponto Fácil (deploy na Vercel)
 
-    Hospedado na Render como serviço Web API.
+### ⚠️ Observação
 
-    Utilizado como backend pelo frontend Ponto Fácil (deploy na Vercel).
+O projeto está hospedado no plano gratuito da Render (Free Tier).  
+Por isso, o servidor pode ser reiniciado automaticamente após algum tempo de inatividade, o que pode causar demora na primeira requisição ou um breve reinício da aplicação.  
+Esse comportamento é esperado da plataforma e não indica erro no projeto.
