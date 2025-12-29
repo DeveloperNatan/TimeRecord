@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("https://ponto-facil-gilt.vercel.app", "http://localhost:3000")
+                .WithOrigins("https://ponto-facil-lake.vercel.app/", "http://localhost:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
