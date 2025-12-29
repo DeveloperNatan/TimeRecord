@@ -23,7 +23,6 @@ namespace TimeRecord.Services
             {
                 MatriculaId = marking.MatriculaId,
                 Timestamp = DateTime.UtcNow,
-                MarkingType = marking.MarkingType,
             };
 
             MarkingValidator.Validate(time);

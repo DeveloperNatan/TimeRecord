@@ -11,7 +11,5 @@ namespace TimeRecord.Models
         public int MatriculaId { get; set; }
 
         public DateTime Timestamp { get; set; }
-
-        public string MarkingType { get; set; }
     }
 }

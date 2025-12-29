@@ -11,10 +11,6 @@ namespace TimeRecord.Validation
             {
                 throw new ValidationException("Matricula invalida!");
             }
-            if (string.IsNullOrWhiteSpace(marking.MarkingType) || marking.MarkingType == "")
-            {
-                throw new ValidationException("Tipo de marcação invalido!");
-            }
         }
     }
 }
