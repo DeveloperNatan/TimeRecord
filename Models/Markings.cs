@@ -6,8 +6,7 @@ namespace TimeRecord.Models
     {
         [Key]
         public int PontoId { get; set; }
-
-        // [ForeignKey("Employee")]
+        
         public int MatriculaId { get; set; }
 
         public DateTime Timestamp { get; set; }
