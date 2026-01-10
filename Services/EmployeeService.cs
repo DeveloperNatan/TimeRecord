@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using TimeRecord.Data;
 using TimeRecord.Models;
 using TimeRecord.Validation;
@@ -18,6 +18,11 @@ namespace TimeRecord.Services
         public async Task<EmployeeResponseDTO> Post(Employee employee)
         {
             EmployeeValidator.Validate(employee);
+            if (!EmailValidator.IsValidEmail(employee))
+            {
+                throw new ValidationException("Email invalido");
+            }
+           
             employee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
 
             _appdbcontext.Employees.Add(employee);

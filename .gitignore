@@ -4,16 +4,13 @@ obj/
 publish/
 out/
 
-# IDE
 .vscode/
 .vs/
 .idea/
 
-# Arquivos temporários
 *.user
 *.log
 
-# Se quiser ignorar configs locais específicas
 appsettings.Local.json
 appsettings.Production.json
 appsettings.Development.json

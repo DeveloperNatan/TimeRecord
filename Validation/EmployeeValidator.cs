@@ -17,10 +17,7 @@ namespace TimeRecord.Validation
                 throw new ValidationException("Digite um cargo valido!");
             }
 
-            if (string.IsNullOrWhiteSpace(employee.Email) || !employee.Email.Contains("@"))
-            {
-                throw new ValidationException("Email invlaido");
-            }
+  
             if (string.IsNullOrWhiteSpace(employee.Senha) || employee.Senha == "string")
             {
                 throw new ValidationException("Senha invalida");
