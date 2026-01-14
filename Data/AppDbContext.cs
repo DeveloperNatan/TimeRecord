@@ -10,7 +10,6 @@ namespace TimeRecord.Data
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Marking> Markings { get; set; }
-        
         public DbSet<Business> Business { get; set; }
     }
 }

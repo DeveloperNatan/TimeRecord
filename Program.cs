@@ -42,6 +42,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 // inejtar dependencias
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<MarkingsService>();
+builder.Services.AddScoped<BusinessService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
