@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
+using TimeRecord.Middleware;
 using TimeRecord.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,7 @@ builder.Services.AddControllers().
         {
             var errors = context.ModelState.Where(x => x.Value?.Errors.Count > 0).ToDictionary(k => k.Key, v => v.Value!.Errors.Select(e => e.ErrorMessage).ToArray());
             return new BadRequestObjectResult(
-                new { message = "Dados invalidos", errors });
+                new { message = "Invalid data", errors });
         };
     });
 builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +50,8 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseMiddleware(typeof(GlobalExceptionMiddleware));
 
 app.UseCors("MyPolicyCors");
 
