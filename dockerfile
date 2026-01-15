@@ -3,12 +3,12 @@ WORKDIR /app
 
 COPY *.csproj .
 COPY *.sln .
-RUN dotnet restore RegistrarPonto.sln
+RUN dotnet restore TimeRecord.sln
 
 COPY . .
-RUN dotnet publish RegistrarPonto.sln -c Release -o out
+RUN dotnet publish TimeRecord.sln -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/out .
-ENTRYPOINT ["dotnet", "RegistrarPonto.dll"]
+ENTRYPOINT ["dotnet", "TimeRecord.dll"]
