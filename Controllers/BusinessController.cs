@@ -13,15 +13,8 @@ namespace TimeRecord.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                var users = await businessService.GetAllUsersAsync();
-                return Ok(users);
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
+            var users = await businessService.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpPost]

@@ -1,4 +1,4 @@
-using System.Net;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeRecord.Middleware
 {
@@ -26,17 +26,24 @@ namespace TimeRecord.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception error)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-            var response = new
+            var (status, message) = exception switch
             {
-                message = "An error occured in the request",
-                details = error.Message
+                KeyNotFoundException => (400, exception.Message),
+                UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
+                ValidationException => (StatusCodes.Status400BadRequest, exception.Message),
+                _ => (StatusCodes.Status500InternalServerError, "An internal server error occured")
             };
-            return context.Response.WriteAsJsonAsync(response);
+
+            context.Response.StatusCode = status;
+
+            return context.Response.WriteAsJsonAsync(new
+            {
+                message = message
+            });
         }
     }
 }

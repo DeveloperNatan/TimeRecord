@@ -51,7 +51,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseMiddleware(typeof(GlobalExceptionMiddleware));
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseCors("MyPolicyCors");
 

@@ -42,7 +42,6 @@ namespace TimeRecord.Services
                 IsActive = dto.IsActive,
                 CreatedAt = DateTime.UtcNow,
             };
-            
              await _appdbcontext.Business.AddAsync(business);
              await _appdbcontext.SaveChangesAsync();
              

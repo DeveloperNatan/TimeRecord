@@ -7,144 +7,55 @@ namespace TimeRecord.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController(EmployeeService employeeService) : ControllerBase
     {
-        private readonly EmployeeService _employeeservice;
-
-        public EmployeesController(EmployeeService employeeservice)
-        {
-            _employeeservice = employeeservice;
-        }
-
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] Employee employee)
+        public async Task<IActionResult> CreateAsync([FromBody] Employee employee)
         {
-            try
-            {
-                var user = await _employeeservice.Post(employee);
-                return Ok(user);
-            }
-            catch (ValidationException error)
-            {
-                return BadRequest(new { message = error.Message });
-            }
+            var createdEmployee = await employeeService.CreateUserAsync(employee);
+            return Ok(createdEmployee);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> AuthenticateLogin(LoginDTO login)
         {
-            try
-            {
-                var user = await _employeeservice.Authenticate(login.Email, login.Senha);
-                return Ok(user);
-            }
-            catch (KeyNotFoundException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-            catch (UnauthorizedAccessException error)
-            {
-                return BadRequest(new { message = error.Message });
-            }
-            catch (Exception)
-            {
-                return BadRequest(
-                    new { message = "Houve algum erro ao processar login, tente novamente!" }
-                );
-            }
+            var connectedEmployee = await employeeService.AuthenticateUser(login.Email, login.Senha);
+            return Ok(connectedEmployee);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FindAllUser()
+        public async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                var users = await _employeeservice.FindAll();
-                return Ok(users);
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { message = "Erro interno ao buscar dados!" });
-            }
+            var employees = await employeeService.GetAllUsersAsync();
+            return Ok(employees);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> FindOneUser(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            try
-            {
-                var user = await _employeeservice.FindOne(id);
-                return Ok(user);
-            }
-            catch (KeyNotFoundException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { message = "Erro interno ao buscar usuario!" });
-            }
+            var employee = await employeeService.GetUserAsync(id);
+            return Ok(employee);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                var user = await _employeeservice.Delete(id);
-                return Ok(new { message = $"Usuario {user.MatriculaId} deletado!" });
-            }
-            catch (KeyNotFoundException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { message = "Erro ao excluir usuario." });
-            }
+            var deletedEmployee = await employeeService.DeleteUserAsync(id);
+            return Ok(new { message = $"User {deletedEmployee.MatriculaId} deleted!" });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(
-            [FromBody] Employee employee,
-            [FromRoute] int id
-        )
+        public async Task<IActionResult> UpdateAsync(Employee employee, int id)
         {
-            try
-            {
-                await _employeeservice.Update(employee, id);
-                return Ok(new { message = "Usuario editado com sucesso." });
-            }
-            catch (KeyNotFoundException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-            catch (ValidationException error)
-            {
-                return BadRequest(new { message = error.Message });
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { message = "Erro ao editar usuario." });
-            }
+            var editedEmployee = await employeeService.UpdateUserAsync(employee, id);
+            return Ok(new { message = $"User {editedEmployee.MatriculaId} edited successfully." });
         }
 
         [HttpGet("{id}/markings")]
-        public async Task<IActionResult> MarkingsUser(int id)
+        public async Task<IActionResult> GetMarkingAsync(int id)
         {
-            try
-            {
-                var Markings = await _employeeservice.FindMarkingsUser(id);
-                return Ok(Markings);
-            }
-            catch (KeyNotFoundException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-            catch (Exception error)
-            {
-                return BadRequest(new { message = error.Message });
-            }
+            var markingsEmployee = await employeeService.GetMarkingUserAsync(id);
+            return Ok(markingsEmployee);
         }
     }
 }

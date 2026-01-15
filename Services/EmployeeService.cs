@@ -6,28 +6,21 @@ using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
-    public class EmployeeService
+    public class EmployeeService(AppDbContext appDbContext)
     {
-        private readonly AppDbContext _appdbcontext;
-
-        public EmployeeService(AppDbContext appdbcontext)
-        {
-            _appdbcontext = appdbcontext;
-        }
-
-        public async Task<EmployeeResponseDTO> Post(Employee employee)
+        public async Task<EmployeeResponseDTO> CreateUserAsync(Employee employee)
         {
             EmployeeValidator.Validate(employee);
             if (!EmailValidator.IsValidEmail(employee))
             {
-                throw new ValidationException("Email invalido");
+                throw new ValidationException("Email invalid");
             }
-           
+
             employee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
 
-            _appdbcontext.Employees.Add(employee);
+            appDbContext.Employees.Add(employee);
 
-            await _appdbcontext.SaveChangesAsync();
+            await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDTO
             {
                 MatriculaId = employee.MatriculaId,
@@ -35,115 +28,121 @@ namespace TimeRecord.Services
             };
         }
 
-        public async Task<EmployeeResponseDTO> Authenticate(string email, string senha)
+        public async Task<EmployeeResponseDTO> AuthenticateUser(string email, string senha)
         {
-            var user = await _appdbcontext.Employees.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
+            var authenticatedEmployee = await appDbContext.Employees.FirstOrDefaultAsync(u => u.Email == email);
+            if (authenticatedEmployee == null)
             {
-                throw new KeyNotFoundException("Usuario não encontrado!");
+                throw new KeyNotFoundException("User not found");
             }
 
-            bool VerifyPassword(string SenhaDigitada)
+            bool VerifyPassword(string passwordEntered)
             {
-                return BCrypt.Net.BCrypt.Verify(SenhaDigitada, user.Senha);
+                return BCrypt.Net.BCrypt.Verify(passwordEntered, authenticatedEmployee.Senha);
             }
 
             if (!VerifyPassword(senha))
             {
-                throw new UnauthorizedAccessException("Senha incorreta!");
+                throw new UnauthorizedAccessException("Password incorrect!");
             }
 
             return new EmployeeResponseDTO
             {
-                MatriculaId = user.MatriculaId,
-                Nome = user.Nome,
-                Cargo = user.Cargo,
+                MatriculaId = authenticatedEmployee.MatriculaId,
+                Nome = authenticatedEmployee.Nome,
+                Cargo = authenticatedEmployee.Cargo,
             };
         }
 
-        public async Task<IEnumerable<Employee>> FindAll()
+        public async Task<IEnumerable<Employee>> GetAllUsersAsync()
         {
-            var UserAll = await _appdbcontext.Employees.ToListAsync();
-            if (UserAll == null)
+            var employees = await appDbContext.Employees.ToListAsync();
+            if (!employees.Any())
             {
-                throw new Exception("Nenhum usuario encontrado!");
+                throw new KeyNotFoundException("No registry found");
             }
-            return UserAll;
+
+            return employees;
         }
 
-        public async Task<EmployeeResponseDTO> FindOne(int id)
+        public async Task<EmployeeResponseDTO> GetUserAsync(int id)
         {
-            var User = await _appdbcontext.Employees.FindAsync(id);
-            if (User == null)
+            var employee = await appDbContext.Employees.FindAsync(id);
+            if (employee == null)
             {
-                throw new KeyNotFoundException("Usuario não encontrado!");
+                throw new KeyNotFoundException("user not found");
             }
+
             return new EmployeeResponseDTO
             {
-                MatriculaId = User.MatriculaId,
-                Nome = User.Nome,
-                Cargo = User.Cargo,
-                Email = User.Email,
+                MatriculaId = employee.MatriculaId,
+                Nome = employee.Nome,
+                Cargo = employee.Cargo,
+                Email = employee.Email,
             };
         }
 
-        public async Task<EmployeeResponseDTO> Delete(int id)
+        public async Task<EmployeeResponseDTO> DeleteUserAsync(int id)
         {
-            var User = await _appdbcontext.Employees.FindAsync(id);
-            if (User == null)
+            var deletedEmployee = await appDbContext.Employees.FindAsync(id);
+            if (deletedEmployee == null)
             {
-                throw new KeyNotFoundException("Usuario não encontrado!");
+                throw new KeyNotFoundException("User not found");
             }
-            _appdbcontext.Remove(User);
-            await _appdbcontext.SaveChangesAsync();
-            return new EmployeeResponseDTO { MatriculaId = User.MatriculaId };
+
+            appDbContext.Remove(deletedEmployee);
+            await appDbContext.SaveChangesAsync();
+            return new EmployeeResponseDTO { MatriculaId = deletedEmployee.MatriculaId };
         }
 
-        public async Task<EmployeeResponseDTO> Update(Employee employee, int id)
+        public async Task<EmployeeResponseDTO> UpdateUserAsync(Employee employee, int id)
         {
-            var user = await _appdbcontext
+            var updatedEmployee = await appDbContext
                 .Employees.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.MatriculaId == id);
 
-            if (user == null)
+            if (updatedEmployee == null)
             {
-                throw new KeyNotFoundException("Usuario não encontrado!");
+                throw new KeyNotFoundException("user not found");
             }
+
             EmployeeValidator.Validate(employee);
-            user.Nome = employee.Nome;
-            user.Cargo = employee.Cargo;
-            user.Email = employee.Email;
+            updatedEmployee.Nome = employee.Nome;
+            updatedEmployee.Cargo = employee.Cargo;
+            updatedEmployee.Email = employee.Email;
 
             if (!string.IsNullOrWhiteSpace(employee.Senha))
             {
-                user.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
+                updatedEmployee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
             }
 
-            await _appdbcontext.SaveChangesAsync();
+            await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDTO
             {
-                MatriculaId = user.MatriculaId,
-                Nome = user.Nome,
-                Cargo = user.Cargo,
-                Email = user.Email,
+                MatriculaId = updatedEmployee.MatriculaId,
+                Nome = updatedEmployee.Nome,
+                Cargo = updatedEmployee.Cargo,
+                Email = updatedEmployee.Email,
             };
         }
 
-        public async Task<IEnumerable<Marking>> FindMarkingsUser(int id)
+        public async Task<IEnumerable<Marking>> GetMarkingUserAsync(int id)
         {
-            var user = await _appdbcontext.Employees.FindAsync(id);
-            if (user == null)
+            var markingsEmployee = await appDbContext.Employees.FindAsync(id);
+            if (markingsEmployee == null)
             {
-                throw new KeyNotFoundException("Usuario não encontrado!");
+                throw new KeyNotFoundException("User not found!");
             }
-            var markings = await _appdbcontext
+
+            var markings = await appDbContext
                 .Markings.Where(m => m.MatriculaId == id)
                 .ToListAsync();
 
             if (!markings.Any())
             {
-                throw new Exception("Nenhum registro encontrado!");
+                throw new Exception("No registry founded!");
             }
+
             return markings;
         }
     }
