@@ -1,76 +1,113 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
+using TimeRecord.DTO.Markings;
 using TimeRecord.Models;
 using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
-    public class MarkingsService
+    public class MarkingsService(AppDbContext appDbContext)
     {
-        private readonly AppDbContext _appdbcontext;
-
-        public MarkingsService(AppDbContext appcontext)
+        public async Task<MarkingsResponseDTO> CreateMarkingAsync(MarkingsCreateDTO dto)
         {
-            _appdbcontext = appcontext;
-        }
-
-        public async Task<Marking> Post(Marking marking)
-        {
-            var time = new Marking
+            var employee = await appDbContext.Employees.FindAsync(dto.MatriculaId);
+            if (employee == null)
             {
-                MatriculaId = marking.MatriculaId,
+                throw new KeyNotFoundException("Employee ID not found in the system!");
+            }
+
+            //save data
+            var marking = new Marking
+            {
+                MatriculaId = dto.MatriculaId,
                 Timestamp = DateTime.UtcNow,
             };
 
-            MarkingValidator.Validate(time);
-            _appdbcontext.Markings.Add(time);
-            await _appdbcontext.SaveChangesAsync();
-            return time;
+            MarkingValidator.Validate(marking);
+            appDbContext.Markings.Add(marking);
+            await appDbContext.SaveChangesAsync();
+
+            var response = new MarkingsResponseDTO()
+            {
+                PontoId = marking.PontoId,
+                MatriculaId = marking.MatriculaId,
+                Timestamp = marking.Timestamp,
+            };
+            
+            return response;
         }
 
-        public async Task<IEnumerable<Marking>> Find()
+        public async Task<IEnumerable<MarkingsResponseDTO>> GetAllMarkingsAsync()
         {
-            var allTime = await _appdbcontext.Markings.ToListAsync();
-            if (allTime == null)
+            var markings = await appDbContext.Markings.ToListAsync();
+            if (!markings.Any())
             {
-                throw new ValidationException("Nenhuma marcação encontrada!");
+                throw new ValidationException("No time markings found!");
             }
-            return allTime;
+
+            var response = markings.Select(time => new MarkingsResponseDTO()
+            {
+                PontoId = time.PontoId,
+                MatriculaId = time.MatriculaId,
+                Timestamp = time.Timestamp,
+            });
+            return response;
         }
 
-        public async Task<Marking> FindOne(int id)
+        public async Task<MarkingsResponseDTO> GetMarkingsAsync(int id)
         {
-            var time = await _appdbcontext.Markings.FindAsync(id);
-            if (time == null)
+            var marking = await appDbContext.Markings.FindAsync(id);
+            if (marking == null)
             {
-                throw new ValidationException("Nenhuma marcação encontrada!");
+                throw new ValidationException("No time markings found for this employee!");
             }
-            return time;
+
+            var response = new MarkingsResponseDTO()
+            {
+                PontoId = marking.PontoId,
+                MatriculaId = marking.MatriculaId,
+                Timestamp = marking.Timestamp,
+            };
+            return response;
         }
 
-        public async Task<Marking> DeleteOne(int id)
+        public async Task<MarkingMessageDTO> DeleteMarkingAsync(int id)
         {
-            var time = await _appdbcontext.Markings.FindAsync(id);
-            if (time == null)
+            var deletedMarking = await appDbContext.Markings.FindAsync(id);
+            if (deletedMarking == null)
             {
-                throw new ValidationException("Marcação não existe!");
+                throw new ValidationException("There is no marking!");
             }
-            _appdbcontext.Remove(time);
-            await _appdbcontext.SaveChangesAsync();
-            return time;
+
+            appDbContext.Remove(deletedMarking);
+            await appDbContext.SaveChangesAsync();
+
+            var response = new MarkingMessageDTO()
+            {
+                Message =
+                    $"The time markings of Employee ID {deletedMarking.MatriculaId} of date {deletedMarking.Timestamp} has been successfully deleted."
+            };
+            return response;
         }
 
-        public async Task<Marking> UpdateOne(Marking marking, int id)
+        public async Task<MarkingsResponseDTO> UpdateMarkingAsync(int id)
         {
-            var time = await _appdbcontext.Markings.FindAsync(id);
-            if (time == null)
+            var updatedMarking = await appDbContext.Markings.FindAsync(id);
+            if (updatedMarking == null)
             {
-                throw new ValidationException("Não é possivel atualizar marcação inexistente!");
+                throw new ValidationException("It's not possible to update a non-existing time!");
             }
-
-            await _appdbcontext.SaveChangesAsync();
-            return time;
+            
+            updatedMarking.Timestamp = DateTime.UtcNow;
+            await appDbContext.SaveChangesAsync();
+            var response = new MarkingsResponseDTO()
+            {
+                PontoId = updatedMarking.PontoId,
+                MatriculaId = updatedMarking.MatriculaId,
+                Timestamp = updatedMarking.Timestamp
+            };
+            return response;
         }
     }
 }
