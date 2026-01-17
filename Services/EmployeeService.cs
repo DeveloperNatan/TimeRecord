@@ -21,11 +21,12 @@ namespace TimeRecord.Services
             appDbContext.Employees.Add(employee);
 
             await appDbContext.SaveChangesAsync();
-            return new EmployeeResponseDTO
+            var response = new EmployeeResponseDTO
             {
                 MatriculaId = employee.MatriculaId,
                 Nome = employee.Nome,
             };
+            return response;
         }
 
         public async Task<EmployeeResponseDTO> AuthenticateUser(string email, string senha)
@@ -33,7 +34,7 @@ namespace TimeRecord.Services
             var authenticatedEmployee = await appDbContext.Employees.FirstOrDefaultAsync(u => u.Email == email);
             if (authenticatedEmployee == null)
             {
-                throw new KeyNotFoundException("User not found");
+                throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
             bool VerifyPassword(string passwordEntered)
@@ -45,13 +46,14 @@ namespace TimeRecord.Services
             {
                 throw new UnauthorizedAccessException("Password incorrect!");
             }
-
-            return new EmployeeResponseDTO
+            
+            var response = new EmployeeResponseDTO
             {
                 MatriculaId = authenticatedEmployee.MatriculaId,
                 Nome = authenticatedEmployee.Nome,
                 Cargo = authenticatedEmployee.Cargo,
             };
+            return response;
         }
 
         public async Task<IEnumerable<Employee>> GetAllUsersAsync()
@@ -59,7 +61,7 @@ namespace TimeRecord.Services
             var employees = await appDbContext.Employees.ToListAsync();
             if (!employees.Any())
             {
-                throw new KeyNotFoundException("No registry found");
+                throw new KeyNotFoundException("There are no users in the system!");
             }
 
             return employees;
@@ -70,7 +72,7 @@ namespace TimeRecord.Services
             var employee = await appDbContext.Employees.FindAsync(id);
             if (employee == null)
             {
-                throw new KeyNotFoundException("user not found");
+                throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
             return new EmployeeResponseDTO
@@ -87,7 +89,7 @@ namespace TimeRecord.Services
             var deletedEmployee = await appDbContext.Employees.FindAsync(id);
             if (deletedEmployee == null)
             {
-                throw new KeyNotFoundException("User not found");
+                throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
             appDbContext.Remove(deletedEmployee);
@@ -103,7 +105,7 @@ namespace TimeRecord.Services
 
             if (updatedEmployee == null)
             {
-                throw new KeyNotFoundException("user not found");
+                throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
             EmployeeValidator.Validate(employee);
@@ -131,7 +133,7 @@ namespace TimeRecord.Services
             var markingsEmployee = await appDbContext.Employees.FindAsync(id);
             if (markingsEmployee == null)
             {
-                throw new KeyNotFoundException("User not found!");
+                throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
             var markings = await appDbContext
@@ -140,7 +142,7 @@ namespace TimeRecord.Services
 
             if (!markings.Any())
             {
-                throw new Exception("No registry founded!");
+                throw new Exception("No time markings found for this employee!");
             }
 
             return markings;

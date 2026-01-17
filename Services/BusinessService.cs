@@ -35,7 +35,7 @@ namespace TimeRecord.Services
                 throw new ValidationException("Invalid data");        
             }
             
-            //salva no banco
+            //save data
             var business = new Business
             {
                 Name = dto.Name,
