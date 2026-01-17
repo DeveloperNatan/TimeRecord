@@ -9,7 +9,7 @@ namespace TimeRecord.Validation
         {
             if (marking.MatriculaId <= 0)
             {
-                throw new ValidationException("Matricula invalida!");
+                throw new ValidationException("Employee ID not found in the system!");
             }
         }
     }

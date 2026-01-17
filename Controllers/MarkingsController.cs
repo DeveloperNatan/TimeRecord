@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using TimeRecord.Models;
+using TimeRecord.DTO.Markings;
 using TimeRecord.Services;
 
 namespace TimeRecord.Controllers
@@ -10,38 +9,38 @@ namespace TimeRecord.Controllers
     public class MarkingsController(MarkingsService markingsService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateMarking([FromBody] Marking req)
+        public async Task<IActionResult> CreateAsync([FromBody] MarkingsCreateDTO dto)
         {
-            var marking = await markingsService.Post(req);
-            return Ok(marking);
+            var createdMarking = await markingsService.CreateMarkingAsync(dto);
+            return Ok(createdMarking);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FindAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var marking = await markingsService.Find();
-            return Ok(marking);
+            var markings = await markingsService.GetAllMarkingsAsync();
+            return Ok(markings);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Find(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var onemarking = await markingsService.FindOne(id);
-            return Ok(onemarking);
+            var marking = await markingsService.GetMarkingsAsync(id);
+            return Ok(marking);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            await markingsService.DeleteOne(id);
-            return Ok("Marking edited successfully");
+            var deletedMarking = await markingsService.DeleteMarkingAsync(id);
+            return Ok(deletedMarking);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Marking marking, int id)
+        public async Task<IActionResult> UpdateAsync(int id)
         {
-            var markingtime = await markingsService.UpdateOne(marking, id);
-            return Ok(markingtime);
+            var updatedMarking = await markingsService.UpdateMarkingAsync(id);
+            return Ok(updatedMarking);
         }
     }
 }
