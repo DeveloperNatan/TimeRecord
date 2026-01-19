@@ -10,9 +10,9 @@ namespace TimeRecord.Controllers
     public class EmployeesController(EmployeeService employeeService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Employee employee)
+        public async Task<IActionResult> CreateAsync(EmployeeCreateDTO dto)
         {
-            var createdEmployee = await employeeService.CreateUserAsync(employee);
+            var createdEmployee = await employeeService.CreateUserAsync(dto);
             return Ok(createdEmployee);
         }
 
@@ -45,7 +45,7 @@ namespace TimeRecord.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Employee employee, int id)
+        public async Task<IActionResult> UpdateAsync(EmployeeCreateDTO employee, int id)
         {
             var editedEmployee = await employeeService.UpdateUserAsync(employee, id);
             return Ok(new { message = $"User {editedEmployee.MatriculaId} edited successfully." });

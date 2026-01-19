@@ -12,12 +12,12 @@ namespace TimeRecord.Models
         [Required]
         [MinLength(2)]
         [MaxLength(100)]
-        public string Nome { get; set; }
+        public string Name { get; set; }
 
         [Required]
         [MinLength(2)]
         [MaxLength(100)]
-        public string Cargo { get; set; }
+        public string Role { get; set; }
 
         [Required]
         [EmailAddress]
@@ -26,6 +26,8 @@ namespace TimeRecord.Models
         [Required]
         [MinLength(2)]
         [MaxLength(100)]
-        public string Senha { get; set; }
+        public string Password { get; set; }
+        
+        
     }
 }

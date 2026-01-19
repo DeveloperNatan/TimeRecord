@@ -1,10 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace TimeRecord.Models
 {
-    public class EmployeeResponseDTO
+    public class EmployeeCreateDTO
     {
-        public int MatriculaId { get; set; }
+
         public string Name { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

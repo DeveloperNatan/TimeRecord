@@ -8,28 +8,35 @@ namespace TimeRecord.Services
 {
     public class EmployeeService(AppDbContext appDbContext)
     {
-        public async Task<EmployeeResponseDTO> CreateUserAsync(Employee employee)
+        public async Task<EmployeeResponseDTO> CreateUserAsync(EmployeeCreateDTO dto)
         {
-            EmployeeValidator.Validate(employee);
-            if (!EmailValidator.IsValidEmail(employee))
+            EmployeeValidator.Validate(dto);
+            if (!EmailValidator.IsValidEmail(dto))
             {
                 throw new ValidationException("Email invalid");
             }
 
-            employee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
+            dto.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            appDbContext.Employees.Add(employee);
-
-            await appDbContext.SaveChangesAsync();
-            var response = new EmployeeResponseDTO
+            var createdEmployee = new Employee()
             {
-                MatriculaId = employee.MatriculaId,
-                Nome = employee.Nome,
+                Name = dto.Name,
+                Role = dto.Role,
+                Email = dto.Email,
+                Password = dto.Password,
+            };
+            await appDbContext.Employees.AddAsync(createdEmployee);
+            await appDbContext.SaveChangesAsync();
+
+            var response = new EmployeeResponseDTO()
+            {
+                MatriculaId = createdEmployee.MatriculaId,
+                Name = createdEmployee.Name,
             };
             return response;
         }
 
-        public async Task<EmployeeResponseDTO> AuthenticateUser(string email, string senha)
+        public async Task<EmployeeResponseDTO> AuthenticateUser(string email, string password)
         {
             var authenticatedEmployee = await appDbContext.Employees.FirstOrDefaultAsync(u => u.Email == email);
             if (authenticatedEmployee == null)
@@ -39,24 +46,24 @@ namespace TimeRecord.Services
 
             bool VerifyPassword(string passwordEntered)
             {
-                return BCrypt.Net.BCrypt.Verify(passwordEntered, authenticatedEmployee.Senha);
+                return BCrypt.Net.BCrypt.Verify(passwordEntered, authenticatedEmployee.Password);
             }
 
-            if (!VerifyPassword(senha))
+            if (!VerifyPassword(password))
             {
                 throw new UnauthorizedAccessException("Password incorrect!");
             }
-            
+
             var response = new EmployeeResponseDTO
             {
                 MatriculaId = authenticatedEmployee.MatriculaId,
-                Nome = authenticatedEmployee.Nome,
-                Cargo = authenticatedEmployee.Cargo,
+                Name = authenticatedEmployee.Name,
+                Role = authenticatedEmployee.Role,
             };
             return response;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllUsersAsync()
+        public async Task<IEnumerable<EmployeeResponseDTO>> GetAllUsersAsync()
         {
             var employees = await appDbContext.Employees.ToListAsync();
             if (!employees.Any())
@@ -64,7 +71,14 @@ namespace TimeRecord.Services
                 throw new KeyNotFoundException("There are no users in the system!");
             }
 
-            return employees;
+            var response = employees.Select(employee => new EmployeeResponseDTO()
+            {
+                MatriculaId = employee.MatriculaId,
+                Name = employee.Name,
+                Role = employee.Name,
+                Email = employee.Email,
+            });
+            return response;
         }
 
         public async Task<EmployeeResponseDTO> GetUserAsync(int id)
@@ -78,8 +92,8 @@ namespace TimeRecord.Services
             return new EmployeeResponseDTO
             {
                 MatriculaId = employee.MatriculaId,
-                Nome = employee.Nome,
-                Cargo = employee.Cargo,
+                Name = employee.Name,
+                Role = employee.Name,
                 Email = employee.Email,
             };
         }
@@ -97,7 +111,7 @@ namespace TimeRecord.Services
             return new EmployeeResponseDTO { MatriculaId = deletedEmployee.MatriculaId };
         }
 
-        public async Task<EmployeeResponseDTO> UpdateUserAsync(Employee employee, int id)
+        public async Task<EmployeeResponseDTO> UpdateUserAsync(EmployeeCreateDTO employee, int id)
         {
             var updatedEmployee = await appDbContext
                 .Employees.AsNoTracking()
@@ -109,21 +123,21 @@ namespace TimeRecord.Services
             }
 
             EmployeeValidator.Validate(employee);
-            updatedEmployee.Nome = employee.Nome;
-            updatedEmployee.Cargo = employee.Cargo;
+            updatedEmployee.Name = employee.Name;
+            updatedEmployee.Role = employee.Role;
             updatedEmployee.Email = employee.Email;
 
-            if (!string.IsNullOrWhiteSpace(employee.Senha))
+            if (!string.IsNullOrWhiteSpace(employee.Password))
             {
-                updatedEmployee.Senha = BCrypt.Net.BCrypt.HashPassword(employee.Senha);
+                updatedEmployee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
             }
 
             await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDTO
             {
                 MatriculaId = updatedEmployee.MatriculaId,
-                Nome = updatedEmployee.Nome,
-                Cargo = updatedEmployee.Cargo,
+                Name = updatedEmployee.Name,
+                Role = updatedEmployee.Role,
                 Email = updatedEmployee.Email,
             };
         }
