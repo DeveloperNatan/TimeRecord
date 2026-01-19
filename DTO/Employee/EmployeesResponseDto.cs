@@ -1,6 +1,6 @@
-namespace TimeRecord.Models
+namespace TimeRecord.DTO.Employee
 {
-    public class EmployeeResponseDTO
+    public class EmployeeResponseDto
     {
         public int MatriculaId { get; set; }
         public string Name { get; set; }

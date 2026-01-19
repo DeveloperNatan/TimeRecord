@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using TimeRecord.Models;
+using TimeRecord.DTO.Employee;
 
 namespace TimeRecord.Validation
 {
     public static class EmployeeValidator
     {
-        public static void Validate(EmployeeCreateDTO employee)
+        public static void Validate(EmployeeCreateDto employee)
         {
             if (string.IsNullOrWhiteSpace(employee.Name) || employee.Name == "string")
             {

@@ -1,11 +1,11 @@
 ﻿using System.Net.Mail;
-using TimeRecord.Models;
+using TimeRecord.DTO.Employee;
 
 namespace TimeRecord.Validation
 {
     public class EmailValidator
     {
-        public static bool IsValidEmail(EmployeeCreateDTO employee)
+        public static bool IsValidEmail(EmployeeCreateDto employee)
         {
             try
             {

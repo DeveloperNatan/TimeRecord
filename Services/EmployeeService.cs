@@ -3,12 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using TimeRecord.Data;
 using TimeRecord.Models;
 using TimeRecord.Validation;
+using TimeRecord.DTO.Employee;
 
 namespace TimeRecord.Services
 {
     public class EmployeeService(AppDbContext appDbContext)
     {
-        public async Task<EmployeeResponseDTO> CreateUserAsync(EmployeeCreateDTO dto)
+        public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateDto dto)
         {
             EmployeeValidator.Validate(dto);
             if (!EmailValidator.IsValidEmail(dto))
@@ -28,7 +29,7 @@ namespace TimeRecord.Services
             await appDbContext.Employees.AddAsync(createdEmployee);
             await appDbContext.SaveChangesAsync();
 
-            var response = new EmployeeResponseDTO()
+            var response = new EmployeeResponseDto()
             {
                 MatriculaId = createdEmployee.MatriculaId,
                 Name = createdEmployee.Name,
@@ -36,7 +37,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<EmployeeResponseDTO> AuthenticateUser(string email, string password)
+        public async Task<EmployeeResponseDto> AuthenticateUser(string email, string password)
         {
             var authenticatedEmployee = await appDbContext.Employees.FirstOrDefaultAsync(u => u.Email == email);
             if (authenticatedEmployee == null)
@@ -54,7 +55,7 @@ namespace TimeRecord.Services
                 throw new UnauthorizedAccessException("Password incorrect!");
             }
 
-            var response = new EmployeeResponseDTO
+            var response = new EmployeeResponseDto
             {
                 MatriculaId = authenticatedEmployee.MatriculaId,
                 Name = authenticatedEmployee.Name,
@@ -63,7 +64,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<IEnumerable<EmployeeResponseDTO>> GetAllUsersAsync()
+        public async Task<IEnumerable<EmployeeResponseDto>> GetAllUsersAsync()
         {
             var employees = await appDbContext.Employees.ToListAsync();
             if (!employees.Any())
@@ -71,7 +72,7 @@ namespace TimeRecord.Services
                 throw new KeyNotFoundException("There are no users in the system!");
             }
 
-            var response = employees.Select(employee => new EmployeeResponseDTO()
+            var response = employees.Select(employee => new EmployeeResponseDto()
             {
                 MatriculaId = employee.MatriculaId,
                 Name = employee.Name,
@@ -81,7 +82,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<EmployeeResponseDTO> GetUserAsync(int id)
+        public async Task<EmployeeResponseDto> GetUserAsync(int id)
         {
             var employee = await appDbContext.Employees.FindAsync(id);
             if (employee == null)
@@ -89,7 +90,7 @@ namespace TimeRecord.Services
                 throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
-            return new EmployeeResponseDTO
+            return new EmployeeResponseDto
             {
                 MatriculaId = employee.MatriculaId,
                 Name = employee.Name,
@@ -98,7 +99,7 @@ namespace TimeRecord.Services
             };
         }
 
-        public async Task<EmployeeResponseDTO> DeleteUserAsync(int id)
+        public async Task<EmployeeResponseDto> DeleteUserAsync(int id)
         {
             var deletedEmployee = await appDbContext.Employees.FindAsync(id);
             if (deletedEmployee == null)
@@ -108,10 +109,10 @@ namespace TimeRecord.Services
 
             appDbContext.Remove(deletedEmployee);
             await appDbContext.SaveChangesAsync();
-            return new EmployeeResponseDTO { MatriculaId = deletedEmployee.MatriculaId };
+            return new EmployeeResponseDto { MatriculaId = deletedEmployee.MatriculaId };
         }
 
-        public async Task<EmployeeResponseDTO> UpdateUserAsync(EmployeeCreateDTO employee, int id)
+        public async Task<EmployeeResponseDto> UpdateUserAsync(EmployeeCreateDto employee, int id)
         {
             var updatedEmployee = await appDbContext
                 .Employees.AsNoTracking()
@@ -133,7 +134,7 @@ namespace TimeRecord.Services
             }
 
             await appDbContext.SaveChangesAsync();
-            return new EmployeeResponseDTO
+            return new EmployeeResponseDto
             {
                 MatriculaId = updatedEmployee.MatriculaId,
                 Name = updatedEmployee.Name,
