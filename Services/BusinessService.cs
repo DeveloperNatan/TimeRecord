@@ -55,22 +55,22 @@ namespace TimeRecord.Services
             }
 
             //save data
-            var company = new Company
+            var createdCompany = new Company
             {
                 Name = dto.Name,
                 IsActive = dto.IsActive,
                 CreatedAt = DateTime.UtcNow,
             };
-            await appDbContext.Company.AddAsync(company);
+            await appDbContext.Company.AddAsync(createdCompany);
             await appDbContext.SaveChangesAsync();
 
             //just result 
             var response = new CompanyResponseDTO()
             {
-                Id = company.Id,
-                Name = company.Name,
-                IsActive = company.IsActive,
-                CreatedAt = company.CreatedAt,
+                Id = createdCompany.Id,
+                Name = createdCompany.Name,
+                IsActive = createdCompany.IsActive,
+                CreatedAt = createdCompany.CreatedAt,
             };
 
             return response;
@@ -78,8 +78,8 @@ namespace TimeRecord.Services
 
         public async Task<CompanyResponseDTO> UpdateCompanyAsync(CompanyCreateDTO dto, int id)
         {
-            var company = await appDbContext.Company.FindAsync(id);
-            if (company == null)
+            var updatedCompany = await appDbContext.Company.FindAsync(id);
+            if (updatedCompany == null)
             {
                 throw new ValidationException("Doesn't exist company");
             }
@@ -89,22 +89,38 @@ namespace TimeRecord.Services
             }
             
        
-            company.Name = dto.Name;
-            company.IsActive = dto.IsActive;
-            company.UpdatedAt = DateTime.UtcNow;
+            updatedCompany.Name = dto.Name;
+            updatedCompany.IsActive = dto.IsActive;
+            updatedCompany.UpdatedAt = DateTime.UtcNow;
 
          
             await appDbContext.SaveChangesAsync();
 
             var response = new CompanyResponseDTO()
             {
-                Id = company.Id,
-                Name = company.Name,
-                IsActive = company.IsActive,
-                CreatedAt =  company.CreatedAt,
-                UpdatedAt = company.UpdatedAt,
+                Id = updatedCompany.Id,
+                Name = updatedCompany.Name,
+                IsActive = updatedCompany.IsActive,
+                CreatedAt =  updatedCompany.CreatedAt,
+                UpdatedAt = updatedCompany.UpdatedAt,
             };
             return response;
+        }
+
+        public async Task<CompanyMessageDTO> DeleteCompanyAsync(int id)
+        {
+            var deletedCompany = await appDbContext.Company.FindAsync(id);
+            if (deletedCompany == null)
+            {
+                throw new ValidationException("Doesn't exist company");
+            }
+            appDbContext.Remove(deletedCompany);
+            await appDbContext.SaveChangesAsync();
+
+            return new CompanyMessageDTO()
+            {
+                Message = $"Company {deletedCompany.Name} was deleted!"
+            };
         }
     }
 }

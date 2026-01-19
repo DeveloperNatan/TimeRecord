@@ -37,5 +37,12 @@ namespace TimeRecord.Controllers
             var updatedCompany = await businessService.UpdateCompanyAsync(dto, id);
             return Ok(updatedCompany);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var deletedCompany = await businessService.DeleteCompanyAsync(id);
+            return Ok(deletedCompany);
+        }
     }
 }
