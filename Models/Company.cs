@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace TimeRecord.Models
 {
-    public class Business
+    public class Company
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

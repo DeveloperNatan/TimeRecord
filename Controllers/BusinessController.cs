@@ -13,15 +13,29 @@ namespace TimeRecord.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var users = await businessService.GetAllUsersAsync();
-            return Ok(users);
+            var companies = await businessService.GetUserAsync();
+            return Ok(companies);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var company = await businessService.GetUserAsync(id);
+            return Ok(company);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CompanyCreateDTO dto)
+        public async Task<IActionResult> CreateAsync(CompanyCreateDTO dto)
         {
-            var user = await businessService.CreateCompanyAsync(dto);
-            return Ok(user);
+            var companyCreated = await businessService.CreateCompanyAsync(dto);
+            return Ok(companyCreated);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(CompanyCreateDTO dto, int id)
+        {
+            var updatedCompany = await businessService.UpdateCompanyAsync(dto, id);
+            return Ok(updatedCompany);
         }
     }
 }
