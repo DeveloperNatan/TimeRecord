@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 using TimeRecord.Data;
 using TimeRecord.DTO.Company;
 using TimeRecord.Models;
@@ -9,7 +8,7 @@ namespace TimeRecord.Services
 {
     public class BusinessService(AppDbContext appDbContext)
     {
-        public async Task<IEnumerable<CompanyResponseDTO>> GetUserAsync()
+        public async Task<IEnumerable<CompanyResponseDto>> GetUserAsync()
         {
             var companies = await appDbContext.Company.ToListAsync();
             if (!companies.Any())
@@ -17,7 +16,7 @@ namespace TimeRecord.Services
                 throw new ValidationException("No registry found");
             }
 
-            var response = companies.Select(company => new CompanyResponseDTO()
+            var response = companies.Select(company => new CompanyResponseDto()
             {
                 Id = company.Id,
                 Name = company.Name,
@@ -28,7 +27,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<CompanyResponseDTO> GetUserAsync(int id)
+        public async Task<CompanyResponseDto> GetUserAsync(int id)
         {
             var company = await appDbContext.Company.FindAsync(id);
             if (company == null)
@@ -36,7 +35,7 @@ namespace TimeRecord.Services
                 throw new ValidationException("Doesn't exist company");
             }
 
-            var response = new CompanyResponseDTO()
+            var response = new CompanyResponseDto()
             {
                 Id = company.Id,
                 Name = company.Name,
@@ -47,7 +46,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<CompanyResponseDTO> CreateCompanyAsync(CompanyCreateDTO dto)
+        public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto dto)
         {
             if (dto == null)
             {
@@ -65,7 +64,7 @@ namespace TimeRecord.Services
             await appDbContext.SaveChangesAsync();
 
             //just result 
-            var response = new CompanyResponseDTO()
+            var response = new CompanyResponseDto()
             {
                 Id = createdCompany.Id,
                 Name = createdCompany.Name,
@@ -76,7 +75,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<CompanyResponseDTO> UpdateCompanyAsync(CompanyCreateDTO dto, int id)
+        public async Task<CompanyResponseDto> UpdateCompanyAsync(CompanyCreateDto dto, int id)
         {
             var updatedCompany = await appDbContext.Company.FindAsync(id);
             if (updatedCompany == null)
@@ -96,7 +95,7 @@ namespace TimeRecord.Services
          
             await appDbContext.SaveChangesAsync();
 
-            var response = new CompanyResponseDTO()
+            var response = new CompanyResponseDto()
             {
                 Id = updatedCompany.Id,
                 Name = updatedCompany.Name,
@@ -107,7 +106,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<CompanyMessageDTO> DeleteCompanyAsync(int id)
+        public async Task<CompanyMessageDto> DeleteCompanyAsync(int id)
         {
             var deletedCompany = await appDbContext.Company.FindAsync(id);
             if (deletedCompany == null)
@@ -117,7 +116,7 @@ namespace TimeRecord.Services
             appDbContext.Remove(deletedCompany);
             await appDbContext.SaveChangesAsync();
 
-            return new CompanyMessageDTO()
+            return new CompanyMessageDto()
             {
                 Message = $"Company {deletedCompany.Name} was deleted!"
             };

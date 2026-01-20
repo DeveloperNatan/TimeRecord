@@ -1,38 +1,42 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using TimeRecord.Data;
-using TimeRecord.Models;
 using TimeRecord.Validation;
 using TimeRecord.DTO.Employee;
+using TimeRecord.DTO.Markings;
+using TimeRecord.Models;
 
 namespace TimeRecord.Services
 {
     public class EmployeeService(AppDbContext appDbContext)
     {
-        public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateDto dto)
+        public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateDto dataDto)
         {
-            EmployeeValidator.Validate(dto);
-            if (!EmailValidator.IsValidEmail(dto))
+            EmployeeValidator.Validate(dataDto);
+            if (!EmailValidator.IsValidEmail(dataDto))
             {
                 throw new ValidationException("Email invalid");
             }
 
-            dto.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            dataDto.Password = BCrypt.Net.BCrypt.HashPassword(dataDto.Password);
 
             var createdEmployee = new Employee()
             {
-                Name = dto.Name,
-                Role = dto.Role,
-                Email = dto.Email,
-                Password = dto.Password,
+                Name = dataDto.Name,
+                Role = dataDto.Role,
+                Email = dataDto.Email,
+                Password = dataDto.Password,
             };
+            
             await appDbContext.Employees.AddAsync(createdEmployee);
             await appDbContext.SaveChangesAsync();
 
             var response = new EmployeeResponseDto()
             {
-                MatriculaId = createdEmployee.MatriculaId,
+                RegistrationId = createdEmployee.RegistrationId,
                 Name = createdEmployee.Name,
+                Role = createdEmployee.Role,
+                Email = createdEmployee.Email,
             };
             return response;
         }
@@ -57,7 +61,7 @@ namespace TimeRecord.Services
 
             var response = new EmployeeResponseDto
             {
-                MatriculaId = authenticatedEmployee.MatriculaId,
+                RegistrationId = authenticatedEmployee.RegistrationId,
                 Name = authenticatedEmployee.Name,
                 Role = authenticatedEmployee.Role,
             };
@@ -74,7 +78,7 @@ namespace TimeRecord.Services
 
             var response = employees.Select(employee => new EmployeeResponseDto()
             {
-                MatriculaId = employee.MatriculaId,
+                RegistrationId = employee.RegistrationId,
                 Name = employee.Name,
                 Role = employee.Name,
                 Email = employee.Email,
@@ -92,14 +96,14 @@ namespace TimeRecord.Services
 
             return new EmployeeResponseDto
             {
-                MatriculaId = employee.MatriculaId,
+                RegistrationId = employee.RegistrationId,
                 Name = employee.Name,
                 Role = employee.Name,
                 Email = employee.Email,
             };
         }
 
-        public async Task<EmployeeResponseDto> DeleteUserAsync(int id)
+        public async Task<EmployeeMessageDto> DeleteUserAsync(int id)
         {
             var deletedEmployee = await appDbContext.Employees.FindAsync(id);
             if (deletedEmployee == null)
@@ -109,41 +113,46 @@ namespace TimeRecord.Services
 
             appDbContext.Remove(deletedEmployee);
             await appDbContext.SaveChangesAsync();
-            return new EmployeeResponseDto { MatriculaId = deletedEmployee.MatriculaId };
+            
+            var response = new EmployeeMessageDto()
+            {
+                Messsage = $"User {deletedEmployee.Name} has been deleted successfully!"
+            };
+            return response;
         }
 
-        public async Task<EmployeeResponseDto> UpdateUserAsync(EmployeeCreateDto employee, int id)
+        public async Task<EmployeeResponseDto> UpdateUserAsync(EmployeeCreateDto dataDto, int id)
         {
             var updatedEmployee = await appDbContext
                 .Employees.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.MatriculaId == id);
+                .FirstOrDefaultAsync(x => x.RegistrationId == id);
 
             if (updatedEmployee == null)
             {
                 throw new KeyNotFoundException("Employee ID not found in the system!");
             }
 
-            EmployeeValidator.Validate(employee);
-            updatedEmployee.Name = employee.Name;
-            updatedEmployee.Role = employee.Role;
-            updatedEmployee.Email = employee.Email;
+            EmployeeValidator.Validate(dataDto);
+            updatedEmployee.Name = dataDto.Name;
+            updatedEmployee.Role = dataDto.Role;
+            updatedEmployee.Email = dataDto.Email;
 
-            if (!string.IsNullOrWhiteSpace(employee.Password))
+            if (!string.IsNullOrWhiteSpace(dataDto.Password))
             {
-                updatedEmployee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
+                updatedEmployee.Password = BCrypt.Net.BCrypt.HashPassword(dataDto.Password);
             }
 
             await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDto
             {
-                MatriculaId = updatedEmployee.MatriculaId,
+                RegistrationId = updatedEmployee.RegistrationId,
                 Name = updatedEmployee.Name,
                 Role = updatedEmployee.Role,
                 Email = updatedEmployee.Email,
             };
         }
 
-        public async Task<IEnumerable<Marking>> GetMarkingUserAsync(int id)
+        public async Task<IEnumerable<MarkingsResponseDto>> GetMarkingUserAsync(int id)
         {
             var markingsEmployee = await appDbContext.Employees.FindAsync(id);
             if (markingsEmployee == null)
@@ -152,15 +161,21 @@ namespace TimeRecord.Services
             }
 
             var markings = await appDbContext
-                .Markings.Where(m => m.MatriculaId == id)
+                .Markings.Where(m => m.RegistrationId == id)
                 .ToListAsync();
 
-            if (!markings.Any())
+            if (markings.Count == 0)
             {
-                throw new Exception("No time markings found for this employee!");
+                throw new KeyNotFoundException("No time markings found for this employee!");
             }
 
-            return markings;
+            var response = markings.Select(employeeMarking => new MarkingsResponseDto()
+            {
+               RegistrationId = employeeMarking.RegistrationId,
+               Timestamp = employeeMarking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+            });
+            
+            return response;
         }
     }
 }
