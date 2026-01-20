@@ -2,7 +2,7 @@ namespace TimeRecord.DTO.Employee
 {
     public class EmployeeUpdateDto
     {
-        public int MatriculaId { get; set; }
+        public int RegistrationId { get; set; }
         public string Nome { get; set; }
         public string Cargo { get; set; }
         public string Email { get; set; }
