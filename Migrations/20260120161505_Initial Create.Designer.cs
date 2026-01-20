@@ -9,11 +9,11 @@ using TimeRecord.Data;
 
 #nullable disable
 
-namespace RegistrarPonto.Migrations
+namespace TimeRecord.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260120142154_Change name column PontoId for RegistrationId")]
-    partial class ChangenamecolumnPontoIdforRegistrationId
+    [Migration("20260120161505_Initial Create")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,11 +54,11 @@ namespace RegistrarPonto.Migrations
 
             modelBuilder.Entity("TimeRecord.Models.Employee", b =>
                 {
-                    b.Property<int>("MatriculaId")
+                    b.Property<int>("RegistrationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MatriculaId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RegistrationId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -79,7 +79,7 @@ namespace RegistrarPonto.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("MatriculaId");
+                    b.HasKey("RegistrationId");
 
                     b.ToTable("Employees");
                 });

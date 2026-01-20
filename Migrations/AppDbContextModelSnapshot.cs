@@ -8,7 +8,7 @@ using TimeRecord.Data;
 
 #nullable disable
 
-namespace RegistrarPonto.Migrations
+namespace TimeRecord.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
