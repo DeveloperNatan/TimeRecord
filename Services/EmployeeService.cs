@@ -10,7 +10,7 @@ namespace TimeRecord.Services
 {
     public class EmployeeService(AppDbContext appDbContext)
     {
-        public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateDto dataDto)
+        public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateAndUpdateDto dataDto)
         {
             EmployeeValidator.Validate(dataDto);
             if (!EmailValidator.IsValidEmail(dataDto))
@@ -121,7 +121,7 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<EmployeeResponseDto> UpdateUserAsync(EmployeeCreateDto dataDto, int id)
+        public async Task<EmployeeResponseDto> UpdateUserAsync(EmployeeCreateAndUpdateDto dataDto, int id)
         {
             var updatedEmployee = await appDbContext
                 .Employees.AsNoTracking()

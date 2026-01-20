@@ -5,7 +5,7 @@ namespace TimeRecord.Validation
 {
     public class EmailValidator
     {
-        public static bool IsValidEmail(EmployeeCreateDto employee)
+        public static bool IsValidEmail(EmployeeCreateAndUpdateDto employee)
         {
             try
             {

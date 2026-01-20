@@ -2,7 +2,7 @@
 
 namespace TimeRecord.DTO.Employee
 {
-    public class EmployeeCreateDto
+    public class EmployeeCreateAndUpdateDto
     {
         public string Name { get; set; }
         public string Role { get; set; }

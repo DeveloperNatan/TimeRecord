@@ -21,6 +21,8 @@ namespace TimeRecord.Models
 
         [Required]
         [EmailAddress]
+        [MinLength(5)]
+        [MaxLength(100)]
         public string Email { get; set; }
 
         [Required]

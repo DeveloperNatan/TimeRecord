@@ -5,7 +5,7 @@ namespace TimeRecord.Validation
 {
     public static class EmployeeValidator
     {
-        public static void Validate(EmployeeCreateDto employee)
+        public static void Validate(EmployeeCreateAndUpdateDto employee)
         {
             if (string.IsNullOrWhiteSpace(employee.Name) || employee.Name == "string")
             {

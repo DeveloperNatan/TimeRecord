@@ -16,7 +16,8 @@ namespace TimeRecord.Models
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [Required] public bool IsActive { get; set; }
+        [Required] 
+        public bool IsActive { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

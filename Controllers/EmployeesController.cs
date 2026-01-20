@@ -10,9 +10,9 @@ namespace TimeRecord.Controllers
     public class EmployeesController(EmployeeService employeeService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(EmployeeCreateDto createRequestDto)
+        public async Task<IActionResult> CreateAsync(EmployeeCreateAndUpdateDto createAndUpdateRequestDto)
         {
-            var createdEmployee = await employeeService.CreateUserAsync(createRequestDto);
+            var createdEmployee = await employeeService.CreateUserAsync(createAndUpdateRequestDto);
             return Ok(createdEmployee);
         }
 
@@ -45,9 +45,9 @@ namespace TimeRecord.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(EmployeeCreateDto createRequestDto, int id)
+        public async Task<IActionResult> UpdateAsync(EmployeeCreateAndUpdateDto createAndUpdateRequestDto, int id)
         {
-            var editedEmployee = await employeeService.UpdateUserAsync(createRequestDto, id);
+            var editedEmployee = await employeeService.UpdateUserAsync(createAndUpdateRequestDto, id);
             return Ok(editedEmployee);
         }
 
