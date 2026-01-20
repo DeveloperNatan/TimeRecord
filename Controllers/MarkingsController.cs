@@ -9,9 +9,9 @@ namespace TimeRecord.Controllers
     public class MarkingsController(MarkingsService markingsService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] MarkingsCreateDTO dto)
+        public async Task<IActionResult> CreateAsync([FromBody] MarkingsCreateDto createRequestDto)
         {
-            var createdMarking = await markingsService.CreateMarkingAsync(dto);
+            var createdMarking = await markingsService.CreateMarkingAsync(createRequestDto);
             return Ok(createdMarking);
         }
 

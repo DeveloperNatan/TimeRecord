@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using TimeRecord.Models;
+using TimeRecord.DTO.Login;
 using TimeRecord.DTO.Employee;
 using TimeRecord.Services;
 
@@ -10,16 +10,16 @@ namespace TimeRecord.Controllers
     public class EmployeesController(EmployeeService employeeService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(EmployeeCreateDto dto)
+        public async Task<IActionResult> CreateAsync(EmployeeCreateDto createRequestDto)
         {
-            var createdEmployee = await employeeService.CreateUserAsync(dto);
+            var createdEmployee = await employeeService.CreateUserAsync(createRequestDto);
             return Ok(createdEmployee);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> AuthenticateLogin(LoginDTO login)
+        public async Task<IActionResult> AuthenticateLogin(LoginDto requestLoginDto)
         {
-            var connectedEmployee = await employeeService.AuthenticateUser(login.Email, login.Senha);
+            var connectedEmployee = await employeeService.AuthenticateUser(requestLoginDto.Email, requestLoginDto.Password);
             return Ok(connectedEmployee);
         }
 
@@ -41,14 +41,14 @@ namespace TimeRecord.Controllers
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var deletedEmployee = await employeeService.DeleteUserAsync(id);
-            return Ok(new { message = $"User {deletedEmployee.MatriculaId} deleted!" });
+            return Ok(deletedEmployee);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(EmployeeCreateDto employee, int id)
+        public async Task<IActionResult> UpdateAsync(EmployeeCreateDto createRequestDto, int id)
         {
-            var editedEmployee = await employeeService.UpdateUserAsync(employee, id);
-            return Ok(new { message = $"User {editedEmployee.MatriculaId} edited successfully." });
+            var editedEmployee = await employeeService.UpdateUserAsync(createRequestDto, id);
+            return Ok(editedEmployee);
         }
 
         [HttpGet("{id}/markings")]

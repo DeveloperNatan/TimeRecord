@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using TimeRecord.Models;
+using TimeRecord.DTO.Markings;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.DTO.Company;
 using TimeRecord.Services;
@@ -25,16 +25,16 @@ namespace TimeRecord.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CompanyCreateDTO dto)
+        public async Task<IActionResult> CreateAsync(CompanyCreateDto createRequestDto)
         {
-            var companyCreated = await businessService.CreateCompanyAsync(dto);
+            var companyCreated = await businessService.CreateCompanyAsync(createRequestDto);
             return Ok(companyCreated);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(CompanyCreateDTO dto, int id)
+        public async Task<IActionResult> UpdateAsync(CompanyCreateDto createRequestDto, int id)
         {
-            var updatedCompany = await businessService.UpdateCompanyAsync(dto, id);
+            var updatedCompany = await businessService.UpdateCompanyAsync(createRequestDto, id);
             return Ok(updatedCompany);
         }
 
