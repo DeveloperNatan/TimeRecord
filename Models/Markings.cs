@@ -1,13 +1,16 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace TimeRecord.Models
 {
     public class Marking
     {
-        [Key] public int PontoId { get; set; }
+        [Key] 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int PontoId { get; set; }
 
-        public int MatriculaId { get; set; }
+        public int RegistrationId { get; set; }
         public DateTime Timestamp { get; set; }
     }
 }
