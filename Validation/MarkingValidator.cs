@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TimeRecord.DTO.Markings;
 using TimeRecord.Models;
 
 namespace TimeRecord.Validation
@@ -7,7 +8,7 @@ namespace TimeRecord.Validation
     {
         public static void Validate(Marking marking)
         {
-            if (marking.MatriculaId <= 0)
+            if (marking.RegistrationId <= 0)
             {
                 throw new ValidationException("Employee ID not found in the system!");
             }

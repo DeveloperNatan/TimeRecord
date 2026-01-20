@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TimeRecord.Data;
@@ -11,9 +12,11 @@ using TimeRecord.Data;
 namespace RegistrarPonto.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260120142154_Change name column PontoId for RegistrationId")]
+    partial class ChangenamecolumnPontoIdforRegistrationId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,11 +54,11 @@ namespace RegistrarPonto.Migrations
 
             modelBuilder.Entity("TimeRecord.Models.Employee", b =>
                 {
-                    b.Property<int>("RegistrationId")
+                    b.Property<int>("MatriculaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RegistrationId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MatriculaId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -76,7 +79,7 @@ namespace RegistrarPonto.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("RegistrationId");
+                    b.HasKey("MatriculaId");
 
                     b.ToTable("Employees");
                 });
