@@ -1,6 +1,6 @@
 namespace TimeRecord.DTO.Company
 {
-    public class CompanyMessageDTO
+    public class CompanyMessageDto
     {
         public string Message { get; set; }
     }
