@@ -1,6 +1,6 @@
 namespace TimeRecord.DTO.Markings
 {
-    public class MarkingMessageDTO
+    public class MarkingMessageDto
     {
         public string Message { get; set; }
     }
