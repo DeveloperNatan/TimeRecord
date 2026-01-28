@@ -25,8 +25,7 @@ A API expõe documentação interativa via Swagger, com todos os endpoints, mode
 
 ### Deploy
 
-- Hospedado na Render como serviço Web API
-- Utilizado como backend pelo frontend Ponto Fácil (deploy na Vercel)
+- https://timerecord-f4crckdddyf9c8h9.brazilsouth-01.azurewebsites.net/swagger/index.html
 
 ### ⚠️ Observação
 
