@@ -35,8 +35,10 @@ builder.Services.AddCors(options =>
 });
 
 var connectionString =
-    Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AppDbConnectionString")
+    Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AppDbConnectionString")
+    ?? Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AppDbConnectionString")
     ?? builder.Configuration.GetConnectionString("AppDbConnectionString");
+
 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
