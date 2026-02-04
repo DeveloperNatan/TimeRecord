@@ -25,7 +25,7 @@ A API expõe documentação interativa via Swagger, com todos os endpoints, mode
 
 ### Deploy
 
-- https://timerecord-f4crckdddyf9c8h9.brazilsouth-01.azurewebsites.net/swagger/index.html
+- [https://timerecord-f4crckdddyf9c8h9.brazilsouth-01.azurewebsites.net/swagger/index.html](https://timerecord-api.purplepebble-537f57d1.brazilsouth.azurecontainerapps.io/swagger/index.html)
 
 ### ⚠️ Observação
 
