@@ -16,3 +16,12 @@ dotnet restore
 
 //Build
 dotnet build
+
+
+
+//Docker
+docker build -t timerecord:dev .
+
+//Run container
+docker run --rm -it -p 8080:8080 --name timerecord timerecord:dev
+

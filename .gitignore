@@ -11,6 +11,8 @@ out/
 *.user
 *.log
 
+
+deploy.md
 appsettings.Local.json
 appsettings.Production.json
 appsettings.Development.json

@@ -7,18 +7,17 @@ namespace TimeRecord.Validation
     {
         public static void Validate(EmployeeCreateAndUpdateDto employee)
         {
-            if (string.IsNullOrWhiteSpace(employee.Name) || employee.Name == "string")
+            if (string.IsNullOrWhiteSpace(employee.Name))
             {
                 throw new ValidationException("Enter a name valid!");
             }
 
-            if (string.IsNullOrWhiteSpace(employee.Role) || employee.Role == "string")
+            if (string.IsNullOrWhiteSpace(employee.Role))
             {
                 throw new ValidationException("Enter a Role valid!");
             }
 
-  
-            if (string.IsNullOrWhiteSpace(employee.Password) || employee.Password == "string")
+            if (string.IsNullOrWhiteSpace(employee.Password))
             {
                 throw new ValidationException("Enter password valid!");
             }

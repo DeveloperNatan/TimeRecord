@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using TimeRecord.Data;
 using TimeRecord.DTO.Company;
 using TimeRecord.Models;
+using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
@@ -46,18 +47,20 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto dto)
+        public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto dataDto)
         {
-            if (dto == null)
+            BusinessValidator.Validate(dataDto);
+            var existingCompany = await appDbContext.Company.AnyAsync(c => c.Name == dataDto.Name);
+            if (existingCompany)
             {
-                throw new ValidationException("Invalid data");
+                throw new ValidationException("This name already exists, try another");
             }
 
             //save data
             var createdCompany = new Company
             {
-                Name = dto.Name,
-                IsActive = dto.IsActive,
+                Name = dataDto.Name,
+                IsActive = dataDto.IsActive,
                 CreatedAt = DateTime.UtcNow,
             };
             await appDbContext.Company.AddAsync(createdCompany);
@@ -75,21 +78,21 @@ namespace TimeRecord.Services
             return response;
         }
 
-        public async Task<CompanyResponseDto> UpdateCompanyAsync(CompanyCreateDto dto, int id)
+        public async Task<CompanyResponseDto> UpdateCompanyAsync(CompanyCreateDto dataDto, int id)
         {
             var updatedCompany = await appDbContext.Company.FindAsync(id);
             if (updatedCompany == null)
             {
                 throw new ValidationException("Doesn't exist company");
             }
-            if (dto == null)
+            if (dataDto == null)
             {
                 throw new ValidationException("Invalid data");
             }
             
        
-            updatedCompany.Name = dto.Name;
-            updatedCompany.IsActive = dto.IsActive;
+            updatedCompany.Name = dataDto.Name;
+            updatedCompany.IsActive = dataDto.IsActive;
             updatedCompany.UpdatedAt = DateTime.UtcNow;
 
          

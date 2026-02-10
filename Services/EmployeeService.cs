@@ -13,11 +13,24 @@ namespace TimeRecord.Services
         public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateAndUpdateDto dataDto)
         {
             EmployeeValidator.Validate(dataDto);
+            var exisingEmployee = await appDbContext.Employees.AnyAsync(e => e.Name == dataDto.Name);
+            var existingEmail = await appDbContext.Employees.AnyAsync(e => e.Email == dataDto.Email);
+            
+            
+            if (exisingEmployee)
+            {
+                throw new ValidationException("This name already exists, try another");
+            }
             if (!EmailValidator.IsValidEmail(dataDto))
             {
                 throw new ValidationException("Email invalid");
             }
+            if (existingEmail)
+            {
+                throw new ValidationException("Email already exists");
+            }
 
+            
             dataDto.Password = BCrypt.Net.BCrypt.HashPassword(dataDto.Password);
 
             var createdEmployee = new Employee()
@@ -83,6 +96,7 @@ namespace TimeRecord.Services
                 Role = employee.Name,
                 Email = employee.Email,
             });
+            
             return response;
         }
 

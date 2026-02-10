@@ -30,6 +30,7 @@ namespace TimeRecord.Services
 
             var response = new MarkingsResponseDto()
             {
+                PontoId = marking.PontoId,
                 RegistrationId = marking.RegistrationId,
                 Timestamp = marking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
             };
