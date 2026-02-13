@@ -1,4 +1,4 @@
-EF CORE commands
+ EF CORE commands
 
 //Add new migration
 dotnet ef migrations add "name migration"

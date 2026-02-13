@@ -17,19 +17,9 @@ namespace TimeRecord.Models
         [Required]
         [MinLength(2)]
         [MaxLength(100)]
-        public string Role { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [MinLength(5)]
-        [MaxLength(100)]
-        public string Email { get; set; }
-
-        [Required]
-        [MinLength(2)]
-        [MaxLength(100)]
-        public string Password { get; set; }
+        public string Job { get; set; }
         
-        
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

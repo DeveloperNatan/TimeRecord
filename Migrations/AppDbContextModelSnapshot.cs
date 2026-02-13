@@ -44,9 +44,15 @@ namespace TimeRecord.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Company");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("TimeRecord.Models.Employee", b =>
@@ -57,26 +63,23 @@ namespace TimeRecord.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RegistrationId"));
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Job")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("RegistrationId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });
@@ -98,6 +101,62 @@ namespace TimeRecord.Migrations
                     b.HasKey("PontoId");
 
                     b.ToTable("Markings");
+                });
+
+            modelBuilder.Entity("TimeRecord.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.PrimitiveCollection<string[]>("Roles")
+                        .HasMaxLength(30)
+                        .HasColumnType("text[]");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TimeRecord.Models.Company", b =>
+                {
+                    b.HasOne("TimeRecord.Models.User", "User")
+                        .WithOne("Company")
+                        .HasForeignKey("TimeRecord.Models.Company", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TimeRecord.Models.Employee", b =>
+                {
+                    b.HasOne("TimeRecord.Models.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("TimeRecord.Models.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TimeRecord.Models.User", b =>
+                {
+                    b.Navigation("Company");
+
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

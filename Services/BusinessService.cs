@@ -11,7 +11,7 @@ namespace TimeRecord.Services
     {
         public async Task<IEnumerable<CompanyResponseDto>> GetUserAsync()
         {
-            var companies = await appDbContext.Company.ToListAsync();
+            var companies = await appDbContext.Companies.ToListAsync();
             if (!companies.Any())
             {
                 throw new ValidationException("No registry found");
@@ -30,7 +30,7 @@ namespace TimeRecord.Services
 
         public async Task<CompanyResponseDto> GetUserAsync(int id)
         {
-            var company = await appDbContext.Company.FindAsync(id);
+            var company = await appDbContext.Companies.FindAsync(id);
             if (company == null)
             {
                 throw new ValidationException("Doesn't exist company");
@@ -50,7 +50,7 @@ namespace TimeRecord.Services
         public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto dataDto)
         {
             BusinessValidator.Validate(dataDto);
-            var existingCompany = await appDbContext.Company.AnyAsync(c => c.Name == dataDto.Name);
+            var existingCompany = await appDbContext.Companies.AnyAsync(c => c.Name == dataDto.Name);
             if (existingCompany)
             {
                 throw new ValidationException("This name already exists, try another");
@@ -63,7 +63,7 @@ namespace TimeRecord.Services
                 IsActive = dataDto.IsActive,
                 CreatedAt = DateTime.UtcNow,
             };
-            await appDbContext.Company.AddAsync(createdCompany);
+            await appDbContext.Companies.AddAsync(createdCompany);
             await appDbContext.SaveChangesAsync();
 
             //just result 
@@ -80,7 +80,7 @@ namespace TimeRecord.Services
 
         public async Task<CompanyResponseDto> UpdateCompanyAsync(CompanyCreateDto dataDto, int id)
         {
-            var updatedCompany = await appDbContext.Company.FindAsync(id);
+            var updatedCompany = await appDbContext.Companies.FindAsync(id);
             if (updatedCompany == null)
             {
                 throw new ValidationException("Doesn't exist company");
@@ -111,7 +111,7 @@ namespace TimeRecord.Services
 
         public async Task<CompanyMessageDto> DeleteCompanyAsync(int id)
         {
-            var deletedCompany = await appDbContext.Company.FindAsync(id);
+            var deletedCompany = await appDbContext.Companies.FindAsync(id);
             if (deletedCompany == null)
             {
                 throw new ValidationException("Doesn't exist company");

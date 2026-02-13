@@ -16,12 +16,12 @@ namespace TimeRecord.Controllers
             return Ok(createdEmployee);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> AuthenticateLogin(LoginDto requestLoginDto)
-        {
-            var connectedEmployee = await employeeService.AuthenticateUser(requestLoginDto.Email, requestLoginDto.Password);
-            return Ok(connectedEmployee);
-        }
+        // [HttpPost("login")]
+        // public async Task<IActionResult> AuthenticateLogin(LoginDto requestLoginDto)
+        // {
+        //     var connectedEmployee = await employeeService.AuthenticateUser(requestLoginDto.Email, requestLoginDto.Password);
+        //     return Ok(connectedEmployee);
+        // }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
