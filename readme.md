@@ -21,7 +21,7 @@ API REST para registro e gestão de ponto de funcionários, utilizada pelo front
 
 A API expõe documentação interativa via Swagger, com todos os endpoints, modelos e exemplos de requisição/resposta.
 
-- Produção: [https://timerecord-gymv.onrender.com/swagger/index.html](https://timerecord-api.purplepebble-537f57d1.brazilsouth.azurecontainerapps.io/swagger/index.html)
+- Produção: [https://timerecord-azure.com/swagger/index.html](https://timerecord-api.purplepebble-537f57d1.brazilsouth.azurecontainerapps.io/swagger/index.html)
 
 ### Deploy
 
