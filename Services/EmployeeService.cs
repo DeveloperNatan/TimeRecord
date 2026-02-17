@@ -73,7 +73,7 @@ namespace TimeRecord.Services
         //     {
         //         RegistrationId = authenticatedEmployee.RegistrationId,
         //         Name = authenticatedEmployee.Name,
-        //         Role = authenticatedEmployee.Role,
+        //        
         //     };
         //     return response;
         // }

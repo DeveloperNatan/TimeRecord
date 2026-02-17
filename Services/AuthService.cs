@@ -8,7 +8,7 @@ namespace TimeRecord.Services;
 
 public class AuthService
 {
-    public string Create(User user)
+    public string GetUser(User user)
     {
         var handler = new JwtSecurityTokenHandler();
 

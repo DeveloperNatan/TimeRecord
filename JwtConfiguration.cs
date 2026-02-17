@@ -2,5 +2,5 @@
 
 public static class JwtConfiguration
 {
-    public static string PrivateKey = "";
+    public static string PrivateKey { get; set; } = "";
 }
