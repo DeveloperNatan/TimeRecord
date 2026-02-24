@@ -27,8 +27,4 @@ A API expõe documentação interativa via Swagger, com todos os endpoints, mode
 
 - Azure usando aplicativo de contêiner
 
-### ⚠️ Observação
 
-O projeto está hospedado no plano gratuito da Render (Free Tier).  
-Por isso, o servidor pode ser reiniciado automaticamente após algum tempo de inatividade, o que pode causar demora na primeira requisição ou um breve reinício da aplicação.  
-Esse comportamento é esperado da plataforma e não indica erro no projeto.
