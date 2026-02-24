@@ -12,15 +12,12 @@ namespace TimeRecord.Validation
                 throw new ValidationException("Enter a name valid!");
             }
 
-            if (string.IsNullOrWhiteSpace(employee.Role))
+            if (string.IsNullOrWhiteSpace(employee.Job))
             {
                 throw new ValidationException("Enter a Role valid!");
             }
 
-            if (string.IsNullOrWhiteSpace(employee.Password))
-            {
-                throw new ValidationException("Enter password valid!");
-            }
+          
         }
     }
 }

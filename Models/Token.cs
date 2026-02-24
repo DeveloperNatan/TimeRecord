@@ -5,6 +5,10 @@ namespace TimeRecord.Models
 {
     public class Token
     {
-       public string TokenJwt { get; set; }
+       public string AcecessToken { get; set; }
+       
+       public string TokenType { get; set; }
+       
+       public int  ExpiresIn { get; set; }
     }
 }

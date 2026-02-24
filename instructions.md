@@ -1,29 +1,35 @@
  EF CORE commands
 
-//Add new migration
+//Add new migration//
 dotnet ef migrations add "name migration"
 
-//Apply migrations
+//Apply migrations//
 dotnet ef database update
 
-//Verify migrations
+//Verify migrations//
 dotnet ef migrations list
 
 
 .NET commands
-//Restore dependencies
+//Restore dependencies//
 dotnet restore
 
-//Build
+//Build//
 dotnet build
 
 
 
-//Docker
-docker build -t timerecord:dev .
+//Docker//
+Buildar + rodar 
+docker compose up --build
+(se quiser em background junto: docker compose up -d --build)​
 
-//Run container
-docker run --rm -it -p 8080:8080 --name timerecord timerecord:dev
+Só rodar 
+docker compose up
+(em background: docker compose up -d)
+
+Só buildar 
+docker compose build
 
 
 

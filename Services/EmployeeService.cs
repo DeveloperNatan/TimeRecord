@@ -10,33 +10,24 @@ namespace TimeRecord.Services
 {
     public class EmployeeService(AppDbContext appDbContext)
     {
-        public async Task<EmployeeResponseDto> CreateUserAsync(EmployeeCreateAndUpdateDto dataDto)
+        public async Task<EmployeeResponseDto> CreateEmployeeAsync(EmployeeCreateAndUpdateDto dataDto)
         {
             EmployeeValidator.Validate(dataDto);
             var exisingEmployee = await appDbContext.Employees.AnyAsync(e => e.Name == dataDto.Name);
-            // var existingEmail = await appDbContext.Employees.AnyAsync(e => e.Email == dataDto.Email);
-            
+     
             
             if (exisingEmployee)
             {
                 throw new ValidationException("This name already exists, try another");
             }
-            if (!EmailValidator.IsValidEmail(dataDto))
-            {
-                throw new ValidationException("Email invalid");
-            }
-            // if (existingEmail)
-            // {
-            //     throw new ValidationException("Email already exists");
-            // }
-
-            
-            dataDto.Password = BCrypt.Net.BCrypt.HashPassword(dataDto.Password);
+      
+      
 
             var createdEmployee = new Employee()
             {
                 Name = dataDto.Name,
-           
+                Job = dataDto.Job,
+                UserId = 1,
             };
             
             await appDbContext.Employees.AddAsync(createdEmployee);
@@ -51,33 +42,6 @@ namespace TimeRecord.Services
             return response;
         }
 
-        // public async Task<EmployeeResponseDto> AuthenticateUser(string email, string password)
-        // {
-        //     var authenticatedEmployee = await appDbContext.Employees.FirstOrDefaultAsync(u => u.Email == email);
-        //     if (authenticatedEmployee == null)
-        //     {
-        //         throw new KeyNotFoundException("Employee ID not found in the system!");
-        //     }
-        //
-        //     bool VerifyPassword(string passwordEntered)
-        //     {
-        //         return BCrypt.Net.BCrypt.Verify(passwordEntered, authenticatedEmployee.Password);
-        //     }
-        //
-        //     if (!VerifyPassword(password))
-        //     {
-        //         throw new UnauthorizedAccessException("Password incorrect!");
-        //     }
-        //
-        //     var response = new EmployeeResponseDto
-        //     {
-        //         RegistrationId = authenticatedEmployee.RegistrationId,
-        //         Name = authenticatedEmployee.Name,
-        //        
-        //     };
-        //     return response;
-        // }
-
         public async Task<IEnumerable<EmployeeResponseDto>> GetAllUsersAsync()
         {
             var employees = await appDbContext.Employees.ToListAsync();
@@ -90,7 +54,7 @@ namespace TimeRecord.Services
             {
                 RegistrationId = employee.RegistrationId,
                 Name = employee.Name,
-                Role = employee.Name,
+                Job = employee.Name,
        
             });
             
@@ -109,7 +73,7 @@ namespace TimeRecord.Services
             {
                 RegistrationId = employee.RegistrationId,
                 Name = employee.Name,
-                Role = employee.Name,
+                Job = employee.Name,
             };
         }
 
@@ -145,12 +109,7 @@ namespace TimeRecord.Services
             EmployeeValidator.Validate(dataDto);
             updatedEmployee.Name = dataDto.Name;
    
-            //
-            // if (!string.IsNullOrWhiteSpace(dataDto.Password))
-            // {
-            //     updatedEmployee.Password = BCrypt.Net.BCrypt.HashPassword(dataDto.Password);
-            // }
-
+  
             await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDto
             {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.DTO.Login;
 using TimeRecord.DTO.Employee;
@@ -12,17 +13,11 @@ namespace TimeRecord.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(EmployeeCreateAndUpdateDto createAndUpdateRequestDto)
         {
-            var createdEmployee = await employeeService.CreateUserAsync(createAndUpdateRequestDto);
+            var createdEmployee = await employeeService.CreateEmployeeAsync(createAndUpdateRequestDto);
             return Ok(createdEmployee);
         }
-
-        // [HttpPost("login")]
-        // public async Task<IActionResult> AuthenticateLogin(LoginDto requestLoginDto)
-        // {
-        //     var connectedEmployee = await employeeService.AuthenticateUser(requestLoginDto.Email, requestLoginDto.Password);
-        //     return Ok(connectedEmployee);
-        // }
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {

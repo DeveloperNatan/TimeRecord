@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.Data;
+using TimeRecord.DTO.Login;
 using TimeRecord.Models;
 using TimeRecord.Services;
 
@@ -12,43 +12,29 @@ namespace TimeRecord.Controllers
     [Route("api/auth/[controller]")]
     public class AuthenticatorController(AuthService authService, AppDbContext appDbContext) : ControllerBase
     {
-        [HttpGet]
-        public async Task<Token> GenerateToken(string email, string password)
+        [HttpPost]
+        public async Task<IActionResult> ValidateUserAsync(LoginDto requestLoginDto)
         {
-            var UserDb = await appDbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
-            if (UserDb == null)
-            {
-                throw new KeyNotFoundException("User not found!");
-            }
-
-            if (password != UserDb.PasswordHash)
-            {
-                throw new KeyNotFoundException("Password was not correct!");
-            }
-            
-            var user = new User
-            {
-                Id = UserDb.Id,
-                Email = UserDb.Email,
-                PasswordHash = UserDb.PasswordHash,
-                Roles = new[] { "developer" }
-            };
-
-            var token = authService.GetUser(user);
-            return new Token()
-            {
-                TokenJwt = token
-            };
+            var validatedUser = await authService.GenerateToken(requestLoginDto.Email, requestLoginDto.PasswordHash);
+            return Ok(validatedUser);
         }
+        
+        [HttpPost("Login")]
+        public async Task<IActionResult> CreateAsync(LoginDto requestLoginDto)
+        {
+            var userCreated = await authService.CreateUserAsync(requestLoginDto);
+            return Ok(userCreated);
+        }
+
 
         [Authorize]
         [HttpGet("test")]
         public IActionResult Test()
         {
-            return Ok("logged-in");
+            return Ok(new
+            {
+                isAuth = User.Identity?.IsAuthenticated
+            });
         }
-        
-        
-     
     }
 }
