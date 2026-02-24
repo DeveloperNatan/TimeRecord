@@ -4,6 +4,7 @@ using TimeRecord.Data;
 using TimeRecord.Validation;
 using TimeRecord.DTO.Employee;
 using TimeRecord.DTO.Markings;
+using TimeRecord.Exceptions;
 using TimeRecord.Models;
 
 namespace TimeRecord.Services
@@ -14,14 +15,13 @@ namespace TimeRecord.Services
         {
             EmployeeValidator.Validate(dataDto);
             var exisingEmployee = await appDbContext.Employees.AnyAsync(e => e.Name == dataDto.Name);
-     
-            
+
+
             if (exisingEmployee)
             {
                 throw new ValidationException("This name already exists, try another");
             }
-      
-      
+
 
             var createdEmployee = new Employee()
             {
@@ -29,7 +29,7 @@ namespace TimeRecord.Services
                 Job = dataDto.Job,
                 UserId = 1,
             };
-            
+
             await appDbContext.Employees.AddAsync(createdEmployee);
             await appDbContext.SaveChangesAsync();
 
@@ -37,7 +37,6 @@ namespace TimeRecord.Services
             {
                 RegistrationId = createdEmployee.RegistrationId,
                 Name = createdEmployee.Name,
-          
             };
             return response;
         }
@@ -55,9 +54,8 @@ namespace TimeRecord.Services
                 RegistrationId = employee.RegistrationId,
                 Name = employee.Name,
                 Job = employee.Name,
-       
             });
-            
+
             return response;
         }
 
@@ -66,7 +64,7 @@ namespace TimeRecord.Services
             var employee = await appDbContext.Employees.FindAsync(id);
             if (employee == null)
             {
-                throw new KeyNotFoundException("Employee ID not found in the system!");
+                throw new NotFoundException("Employee ID not found in the system!");
             }
 
             return new EmployeeResponseDto
@@ -87,7 +85,7 @@ namespace TimeRecord.Services
 
             appDbContext.Remove(deletedEmployee);
             await appDbContext.SaveChangesAsync();
-            
+
             var response = new EmployeeMessageDto()
             {
                 Messsage = $"User {deletedEmployee.Name} has been deleted successfully!"
@@ -108,14 +106,13 @@ namespace TimeRecord.Services
 
             EmployeeValidator.Validate(dataDto);
             updatedEmployee.Name = dataDto.Name;
-   
-  
+
+
             await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDto
             {
                 RegistrationId = updatedEmployee.RegistrationId,
                 Name = updatedEmployee.Name,
-     
             };
         }
 
@@ -138,10 +135,10 @@ namespace TimeRecord.Services
 
             var response = markings.Select(employeeMarking => new MarkingsResponseDto()
             {
-               RegistrationId = employeeMarking.RegistrationId,
-               Timestamp = employeeMarking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                RegistrationId = employeeMarking.RegistrationId,
+                Timestamp = employeeMarking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
             });
-            
+
             return response;
         }
     }

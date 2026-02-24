@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using TimeRecord.Exceptions;
+using TimeRecord.Models;
 
 namespace TimeRecord.Middleware
 {
@@ -28,22 +30,25 @@ namespace TimeRecord.Middleware
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = "application/problem+json";
 
-            var (status, message) = exception switch
+            var (status, title) = exception switch
             {
-                KeyNotFoundException => (400, exception.Message),
-                UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
-                ValidationException => (StatusCodes.Status400BadRequest, exception.Message),
-                _ => (StatusCodes.Status500InternalServerError, "An internal server error occured")
+                KeyNotFoundException => (401, "You don't have permission"), NotFoundException => (404, exception.Message),
+                UnauthorizedAccessException => (401, exception.Message),
+                ValidationException => (400, exception.Message),
+                _ => (500, "An internal server error occured")
             };
 
             context.Response.StatusCode = status;
 
-            return context.Response.WriteAsJsonAsync(new
+            var problem = new ProblemDetails
             {
-                message = message
-            });
+                Status = status,
+                Title = title,
+            };
+
+            return context.Response.WriteAsJsonAsync(problem);
         }
     }
 }
