@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.DTO.Markings;
 using TimeRecord.Services;
@@ -8,6 +9,7 @@ namespace TimeRecord.Controllers
     [Route("api/[controller]")]
     public class MarkingsController(MarkingsService markingsService) : ControllerBase
     {
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] MarkingsCreateDto createRequestDto)
         {
@@ -15,6 +17,7 @@ namespace TimeRecord.Controllers
             return Ok(createdMarking);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -22,6 +25,7 @@ namespace TimeRecord.Controllers
             return Ok(markings);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
@@ -29,6 +33,7 @@ namespace TimeRecord.Controllers
             return Ok(marking);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
@@ -36,6 +41,7 @@ namespace TimeRecord.Controllers
             return Ok(deletedMarking);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id)
         {

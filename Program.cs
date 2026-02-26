@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TimeRecord;
 using TimeRecord.Data;
+using TimeRecord.DTO;
+using TimeRecord.DTO.Auth;
 using TimeRecord.Middleware;
 using TimeRecord.Services;
 
@@ -85,6 +88,21 @@ builder.Services
     })
     .AddJwtBearer(options =>
     {
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                var result = new AuthResponseDTO()
+                {
+                    StatusCode = 401,
+                    Message = "Missing or invalid access token.",
+                    Authentication = false,
+                };
+                return context.Response.WriteAsJsonAsync(result);
+            }
+        };
         options.TokenValidationParameters = new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(
