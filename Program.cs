@@ -67,8 +67,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyPolicyCors", policy =>
         policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
     );
 });
 
@@ -127,11 +127,10 @@ builder.Services.AddScoped<BusinessService>();
 var app = builder.Build();
 
 // ===== Swagger middleware (commonly only in Development) =====
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 // ===== Middleware pipeline =====
 app.UseMiddleware<GlobalExceptionMiddleware>();
