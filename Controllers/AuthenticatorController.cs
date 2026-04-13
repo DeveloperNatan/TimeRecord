@@ -27,6 +27,15 @@ namespace TimeRecord.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetAsync()
+        {
+            var allUsers = await authService.GetUserAsync();
+            return Ok(allUsers);
+        }
+        
+
+
         [Authorize]
         [HttpGet("test")]
         public IActionResult Test()

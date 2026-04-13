@@ -17,7 +17,7 @@ namespace TimeRecord.Controllers
             return Ok(createdEmployee);
         }
         
-        [Authorize]
+    
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {

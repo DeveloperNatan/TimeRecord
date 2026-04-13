@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TimeRecord.Data;
+using TimeRecord.DTO.Auth;
 using TimeRecord.DTO.Login;
 using TimeRecord.Models;
 
@@ -78,7 +79,7 @@ public class AuthService(AppDbContext appDbContext)
     }
 
 
-    public async Task<string> CreateUserAsync(LoginDto dataDto)
+    public async Task<AuthResponseDTO> CreateUserAsync(LoginDto dataDto)
     {
         var existingEmail = await appDbContext.Users.AnyAsync(e => e.Email == dataDto.Email);
 
@@ -99,7 +100,20 @@ public class AuthService(AppDbContext appDbContext)
         await appDbContext.SaveChangesAsync();
 
 
-        var response = "User created!";
+        var response = new AuthResponseDTO()
+        {
+            StatusCode = 201,
+            Message =  "User created successfully",
+            Authentication = true,
+        };
+        
         return response;
     }
+
+    public async Task<IEnumerable<User>> GetUserAsync()
+    {
+       var allUsers =  await appDbContext.Users.ToListAsync();
+       return allUsers;
+    }
+    
 }
