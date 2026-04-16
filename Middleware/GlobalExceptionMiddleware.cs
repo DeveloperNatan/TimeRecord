@@ -34,11 +34,11 @@ namespace TimeRecord.Middleware
 
             var (status, title) = exception switch
             {
-                KeyNotFoundException => (401, "You don't have permission"), NotFoundException => (404, exception.Message),
+                KeyNotFoundException => (401, exception.Message), NotFoundException => (404, exception.Message),
                 UnauthorizedAccessException => (401, exception.Message),
                 AppException=>(404, exception.Message),
                 ValidationException => (400, exception.Message),
-                _ => (500, "An internal server error occured")
+                _ => (500, exception.Message)
             };
 
             context.Response.StatusCode = status;

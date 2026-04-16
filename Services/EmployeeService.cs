@@ -11,9 +11,14 @@ namespace TimeRecord.Services
 {
     public class EmployeeService(AppDbContext appDbContext)
     {
-        public async Task<EmployeeResponseDto> CreateEmployeeAsync(EmployeeCreateAndUpdateDto dataDto)
+        public async Task<EmployeeResponseDto> CreateEmployeeAsync(EmployeeCreateAndUpdateDto dataDto, int userId)
         {
             EmployeeValidator.Validate(dataDto);
+            var userExists = await appDbContext.Users.AnyAsync(u => u.Id == userId);
+            if(!userExists)
+            {
+                throw new NotFoundException(404, "UserId not exist");
+            }
             var exisingEmployee = await appDbContext.Employees.AnyAsync(e => e.Name == dataDto.Name);
 
 
@@ -27,7 +32,7 @@ namespace TimeRecord.Services
             {
                 Name = dataDto.Name,
                 Job = dataDto.Job,
-                UserId = 1,
+                UserId = userId ,
             };
 
             await appDbContext.Employees.AddAsync(createdEmployee);
@@ -35,7 +40,7 @@ namespace TimeRecord.Services
 
             var response = new EmployeeResponseDto()
             {
-                RegistrationId = createdEmployee.RegistrationId,
+                UserId = createdEmployee.Id,
                 Name = createdEmployee.Name,
             };
             return response;
@@ -46,12 +51,12 @@ namespace TimeRecord.Services
             var employees = await appDbContext.Employees.ToListAsync();
             if (!employees.Any())
             {
-                throw new KeyNotFoundException("There are no users in the system!");
+                throw new NotFoundException(404, "Employee ID not found in the system!");
             }
 
             var response = employees.Select(employee => new EmployeeResponseDto()
             {
-                RegistrationId = employee.RegistrationId,
+                UserId = employee.Id,
                 Name = employee.Name,
                 Job = employee.Name,
             });
@@ -64,12 +69,12 @@ namespace TimeRecord.Services
             var employee = await appDbContext.Employees.FindAsync(id);
             if (employee == null)
             {
-                throw new NotFoundException("Employee ID not found in the system!");
+                throw new NotFoundException(404, "Employee ID not found in the system!");
             }
 
             return new EmployeeResponseDto
             {
-                RegistrationId = employee.RegistrationId,
+                UserId = employee.Id,
                 Name = employee.Name,
                 Job = employee.Name,
             };
@@ -80,7 +85,7 @@ namespace TimeRecord.Services
             var deletedEmployee = await appDbContext.Employees.FindAsync(id);
             if (deletedEmployee == null)
             {
-                throw new KeyNotFoundException("Employee ID not found in the system!");
+                throw new NotFoundException(404, "Employee ID not found in the system!");
             }
 
             appDbContext.Remove(deletedEmployee);
@@ -97,11 +102,11 @@ namespace TimeRecord.Services
         {
             var updatedEmployee = await appDbContext
                 .Employees.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.RegistrationId == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (updatedEmployee == null)
             {
-                throw new KeyNotFoundException("Employee ID not found in the system!");
+                throw new NotFoundException(404, "Employee ID not found in the system!");
             }
 
             EmployeeValidator.Validate(dataDto);
@@ -111,7 +116,7 @@ namespace TimeRecord.Services
             await appDbContext.SaveChangesAsync();
             return new EmployeeResponseDto
             {
-                RegistrationId = updatedEmployee.RegistrationId,
+                UserId = updatedEmployee.Id,
                 Name = updatedEmployee.Name,
             };
         }
@@ -121,11 +126,11 @@ namespace TimeRecord.Services
             var markingsEmployee = await appDbContext.Employees.FindAsync(id);
             if (markingsEmployee == null)
             {
-                throw new KeyNotFoundException("Employee ID not found in the system!");
+                throw new NotFoundException(404, "Employee ID not found in the system!");
             }
 
             var markings = await appDbContext
-                .Markings.Where(m => m.RegistrationId == id)
+                .Markings.Where(m => m.UserId == id)
                 .ToListAsync();
 
             if (markings.Count == 0)
@@ -135,8 +140,8 @@ namespace TimeRecord.Services
 
             var response = markings.Select(employeeMarking => new MarkingsResponseDto()
             {
-                RegistrationId = employeeMarking.RegistrationId,
-                Timestamp = employeeMarking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                UserId = employeeMarking.UserId,
+                Timestamp = employeeMarking.Timestamp,
             });
 
             return response;

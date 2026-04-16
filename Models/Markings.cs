@@ -8,9 +8,9 @@ namespace TimeRecord.Models
     {
         [Key] 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PontoId { get; set; }
+        public int Id { get; set; }
 
-        public int RegistrationId { get; set; }
+        public int UserId { get; set; }
         public DateTime Timestamp { get; set; }
     }
 }

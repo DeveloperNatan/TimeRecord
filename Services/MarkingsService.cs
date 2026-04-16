@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using TimeRecord.Data;
 using TimeRecord.DTO.Markings;
+using TimeRecord.Exceptions;
 using TimeRecord.Models;
 using TimeRecord.Validation;
 
@@ -11,16 +12,16 @@ namespace TimeRecord.Services
     {
         public async Task<MarkingsResponseDto> CreateMarkingAsync(MarkingsCreateDto dataDto)
         {
-            var employee = await appDbContext.Employees.FindAsync(dataDto.RegistrationId);
+            var employee = await appDbContext.Employees.FindAsync(dataDto.UsedId);
             if (employee == null)
             {
-                throw new KeyNotFoundException("Employee ID not found in the system!");
+                throw new NotFoundException(404, "Employee ID not found in the system!");
             }
 
             //save data
             var marking = new Marking()
             {
-                RegistrationId = dataDto.RegistrationId,
+                UserId = dataDto.UsedId,
                 Timestamp = DateTime.UtcNow,
             };
 
@@ -30,9 +31,9 @@ namespace TimeRecord.Services
 
             var response = new MarkingsResponseDto()
             {
-                PontoId = marking.PontoId,
-                RegistrationId = marking.RegistrationId,
-                Timestamp = marking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                Id = marking.Id,
+                UserId = marking.UserId,
+                Timestamp = marking.Timestamp,
             };
             
             return response;
@@ -41,16 +42,13 @@ namespace TimeRecord.Services
         public async Task<IEnumerable<MarkingsResponseDto>> GetAllMarkingsAsync()
         {
             var markings = await appDbContext.Markings.ToListAsync();
-            if (!markings.Any())
-            {
-                throw new ValidationException("No time markings found!");
-            }
+           
 
             var response = markings.Select(marking => new MarkingsResponseDto()
             {
-                PontoId = marking.PontoId,
-                RegistrationId = marking.RegistrationId,
-                Timestamp = marking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                Id = marking.Id,
+                UserId = marking.UserId,
+                Timestamp = marking.Timestamp,
             });
             return response;
         }
@@ -60,14 +58,14 @@ namespace TimeRecord.Services
             var marking = await appDbContext.Markings.FindAsync(id);
             if (marking == null)
             {
-                throw new ValidationException("No time markings found for this employee!");
+                throw new NotFoundException(404, "No time markings found for this employee!");
             }
 
             var response = new MarkingsResponseDto()
             {
-                PontoId = marking.PontoId,
-                RegistrationId = marking.RegistrationId,
-                Timestamp = marking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                Id = marking.Id,
+                UserId = marking.UserId,
+                Timestamp = marking.Timestamp,
             };
             return response;
         }
@@ -77,7 +75,7 @@ namespace TimeRecord.Services
             var deletedMarking = await appDbContext.Markings.FindAsync(id);
             if (deletedMarking == null)
             {
-                throw new ValidationException("There is no marking!");
+                throw new NotFoundException(404, "There is no markings");
             }
 
             appDbContext.Remove(deletedMarking);
@@ -85,8 +83,10 @@ namespace TimeRecord.Services
 
             var response = new MarkingMessageDto()
             {
+                StatusCode = 200,
+                UserId = deletedMarking.UserId,
                 Message =
-                    $"The time markings of Employee ID {deletedMarking.RegistrationId} of date {deletedMarking.Timestamp} has been successfully deleted."
+                    $"The time markings of date {deletedMarking.Timestamp} has been successfully deleted."
             };
             return response;
         }
@@ -96,16 +96,16 @@ namespace TimeRecord.Services
             var updatedMarking = await appDbContext.Markings.FindAsync(id);
             if (updatedMarking == null)
             {
-                throw new ValidationException("It's not possible to update a non-existing time!");
+                throw new NotFoundException(404, "It's not possible to update a non-existing time!");
             }
             
             updatedMarking.Timestamp = DateTime.UtcNow;
             await appDbContext.SaveChangesAsync();
             var response = new MarkingsResponseDto()
             {
-                PontoId = updatedMarking.PontoId,
-                RegistrationId = updatedMarking.RegistrationId,
-                Timestamp = updatedMarking.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                Id = updatedMarking.Id,
+                UserId = updatedMarking.UserId,
+                Timestamp = updatedMarking.Timestamp,
             };
             return response;
         }

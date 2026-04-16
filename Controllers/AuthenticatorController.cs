@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.Data;
 using TimeRecord.DTO.Login;
-using TimeRecord.Models;
 using TimeRecord.Services;
 
 namespace TimeRecord.Controllers

@@ -2,5 +2,9 @@
 
 public class NotFoundException : Exception
 {
-    public NotFoundException(string message) : base(message) { }
+    public int StatusCode { get; }
+    public NotFoundException(int statusCode, string message) : base(message)
+    {
+        StatusCode = statusCode;
+    }
 }

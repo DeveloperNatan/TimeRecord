@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TimeRecord.DTO.Employee;
 using TimeRecord.Services;
@@ -11,7 +12,9 @@ namespace TimeRecord.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(EmployeeCreateAndUpdateDto createAndUpdateRequestDto)
         {
-            var createdEmployee = await employeeService.CreateEmployeeAsync(createAndUpdateRequestDto);
+            // var userId = int.Parse(User.FindFirstValue("userId")!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var createdEmployee = await employeeService.CreateEmployeeAsync(createAndUpdateRequestDto,  userId);
             return Ok(createdEmployee);
         }
         

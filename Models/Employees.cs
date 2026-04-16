@@ -7,7 +7,7 @@ namespace TimeRecord.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RegistrationId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MinLength(2)]
