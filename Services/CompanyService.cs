@@ -2,19 +2,22 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using TimeRecord.Data;
 using TimeRecord.DTO.Company;
+using TimeRecord.Exceptions;
 using TimeRecord.Models;
 using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
-    public class BusinessService(AppDbContext appDbContext)
+    public class CompanyService(AppDbContext appDbContext)
     {
         public async Task<IEnumerable<CompanyResponseDto>> GetUserAsync()
         {
             var companies = await appDbContext.Companies.ToListAsync();
+            
+                
             if (!companies.Any())
             {
-                throw new ValidationException("No registry found");
+                throw new AppException(404, "Company not found");
             }
 
             var response = companies.Select(company => new CompanyResponseDto()

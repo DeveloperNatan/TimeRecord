@@ -36,6 +36,7 @@ namespace TimeRecord.Middleware
             {
                 KeyNotFoundException => (401, "You don't have permission"), NotFoundException => (404, exception.Message),
                 UnauthorizedAccessException => (401, exception.Message),
+                AppException=>(404, exception.Message),
                 ValidationException => (400, exception.Message),
                 _ => (500, "An internal server error occured")
             };
@@ -44,7 +45,7 @@ namespace TimeRecord.Middleware
 
             var problem = new ProblemDetails
             {
-                Status = status,
+                StatusCode = status,
                 Title = title,
             };
 

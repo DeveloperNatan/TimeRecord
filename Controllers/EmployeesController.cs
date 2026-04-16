@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TimeRecord.DTO.Login;
 using TimeRecord.DTO.Employee;
 using TimeRecord.Services;
 

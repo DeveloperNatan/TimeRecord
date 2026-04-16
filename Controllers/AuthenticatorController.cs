@@ -12,14 +12,14 @@ namespace TimeRecord.Controllers
     [Route("api/auth/[controller]")]
     public class AuthenticatorController(AuthService authService, AppDbContext appDbContext) : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> ValidateUserAsync(LoginDto requestLoginDto)
         {
             var validatedUser = await authService.GenerateToken(requestLoginDto.Email, requestLoginDto.PasswordHash);
             return Ok(validatedUser);
         }
         
-        [HttpPost("Login")]
+        [HttpPost("register")]
         public async Task<IActionResult> CreateAsync(LoginDto requestLoginDto)
         {
             var userCreated = await authService.CreateUserAsync(requestLoginDto);

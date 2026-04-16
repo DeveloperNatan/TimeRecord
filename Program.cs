@@ -122,7 +122,7 @@ builder.Services.AddAuthorization(); // required for [Authorize] [web:11]
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<MarkingsService>();
-builder.Services.AddScoped<BusinessService>();
+builder.Services.AddScoped<CompanyService>();
 
 var app = builder.Build();
 
