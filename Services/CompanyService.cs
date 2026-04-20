@@ -60,7 +60,7 @@ namespace TimeRecord.Services
             }
 
             //save data
-            var createdCompany = new Company
+            var createdCompany = new Companies
             {
                 Name = dataDto.Name,
                 IsActive = dataDto.IsActive,

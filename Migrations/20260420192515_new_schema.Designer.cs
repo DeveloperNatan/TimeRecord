@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TimeRecord.Data;
@@ -11,9 +12,11 @@ using TimeRecord.Data;
 namespace TimeRecord.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260420192515_new_schema")]
+    partial class new_schema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,7 +124,7 @@ namespace TimeRecord.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("TimeRecords");
+                    b.ToTable("Markings");
                 });
 
             modelBuilder.Entity("TimeRecord.Models.Users", b =>

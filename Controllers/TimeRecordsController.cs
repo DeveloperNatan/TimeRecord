@@ -7,13 +7,13 @@ namespace TimeRecord.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MarkingsController(MarkingsService markingsService) : ControllerBase
+    public class TimeRecordsController(TimeRecordsService timeRecordsService) : ControllerBase
     {
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] MarkingsCreateDto createRequestDto)
+        public async Task<IActionResult> CreateAsync([FromBody] TimeRecordsCreateDto createRequestDto)
         {
-            var createdMarking = await markingsService.CreateMarkingAsync(createRequestDto);
+            var createdMarking = await timeRecordsService.CreateMarkingAsync(createRequestDto);
             return Ok(createdMarking);
         }
 
@@ -21,7 +21,7 @@ namespace TimeRecord.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var markings = await markingsService.GetAllMarkingsAsync();
+            var markings = await timeRecordsService.GetAllMarkingsAsync();
             return Ok(markings);
         }
 
@@ -29,7 +29,7 @@ namespace TimeRecord.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var marking = await markingsService.GetMarkingsAsync(id);
+            var marking = await timeRecordsService.GetMarkingsAsync(id);
             return Ok(marking);
         }
 
@@ -37,7 +37,7 @@ namespace TimeRecord.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deletedMarking = await markingsService.DeleteMarkingAsync(id);
+            var deletedMarking = await timeRecordsService.DeleteMarkingAsync(id);
             return Ok(deletedMarking);
         }
 
@@ -45,7 +45,7 @@ namespace TimeRecord.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id)
         {
-            var updatedMarking = await markingsService.UpdateMarkingAsync(id);
+            var updatedMarking = await timeRecordsService.UpdateMarkingAsync(id);
             return Ok(updatedMarking);
         }
     }

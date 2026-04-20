@@ -8,9 +8,9 @@ using TimeRecord.Validation;
 
 namespace TimeRecord.Services
 {
-    public class MarkingsService(AppDbContext appDbContext)
+    public class TimeRecordsService(AppDbContext appDbContext)
     {
-        public async Task<MarkingsResponseDto> CreateMarkingAsync(MarkingsCreateDto dataDto)
+        public async Task<TimeRecordsResponseDto> CreateMarkingAsync(TimeRecordsCreateDto dataDto)
         {
             var employee = await appDbContext.Employees.FindAsync(dataDto.UsedId);
             if (employee == null)
@@ -19,60 +19,60 @@ namespace TimeRecord.Services
             }
 
             //save data
-            var marking = new Marking()
+            var marking = new TimeRecords()
             {
-                UserId = dataDto.UsedId,
-                Timestamp = DateTime.UtcNow,
+                EmployeeId = dataDto.UsedId,
+                RecordedAt = DateTime.UtcNow,
             };
 
             MarkingValidator.Validate(marking);
-            appDbContext.Markings.Add(marking);
+            appDbContext.TimeRecords.Add(marking);
             await appDbContext.SaveChangesAsync();
 
-            var response = new MarkingsResponseDto()
+            var response = new TimeRecordsResponseDto()
             {
                 Id = marking.Id,
-                UserId = marking.UserId,
-                Timestamp = marking.Timestamp,
+                UserId = marking.EmployeeId,
+                RecordedAt = marking.RecordedAt,
             };
             
             return response;
         }
 
-        public async Task<IEnumerable<MarkingsResponseDto>> GetAllMarkingsAsync()
+        public async Task<IEnumerable<TimeRecordsResponseDto>> GetAllMarkingsAsync()
         {
-            var markings = await appDbContext.Markings.ToListAsync();
+            var markings = await appDbContext.TimeRecords.ToListAsync();
            
 
-            var response = markings.Select(marking => new MarkingsResponseDto()
+            var response = markings.Select(marking => new TimeRecordsResponseDto()
             {
                 Id = marking.Id,
-                UserId = marking.UserId,
-                Timestamp = marking.Timestamp,
+                UserId = marking.EmployeeId,
+                RecordedAt = marking.RecordedAt,
             });
             return response;
         }
 
-        public async Task<MarkingsResponseDto> GetMarkingsAsync(int id)
+        public async Task<TimeRecordsResponseDto> GetMarkingsAsync(int id)
         {
-            var marking = await appDbContext.Markings.FindAsync(id);
+            var marking = await appDbContext.TimeRecords.FindAsync(id);
             if (marking == null)
             {
                 throw new NotFoundException(404, "No time markings found for this employee!");
             }
 
-            var response = new MarkingsResponseDto()
+            var response = new TimeRecordsResponseDto()
             {
                 Id = marking.Id,
-                UserId = marking.UserId,
-                Timestamp = marking.Timestamp,
+                UserId = marking.EmployeeId,
+                RecordedAt = marking.RecordedAt,
             };
             return response;
         }
 
-        public async Task<MarkingMessageDto> DeleteMarkingAsync(int id)
+        public async Task<TimeRecordsMessageDto> DeleteMarkingAsync(int id)
         {
-            var deletedMarking = await appDbContext.Markings.FindAsync(id);
+            var deletedMarking = await appDbContext.TimeRecords.FindAsync(id);
             if (deletedMarking == null)
             {
                 throw new NotFoundException(404, "There is no markings");
@@ -81,31 +81,31 @@ namespace TimeRecord.Services
             appDbContext.Remove(deletedMarking);
             await appDbContext.SaveChangesAsync();
 
-            var response = new MarkingMessageDto()
+            var response = new TimeRecordsMessageDto()
             {
                 StatusCode = 200,
-                UserId = deletedMarking.UserId,
+                UserId = deletedMarking.EmployeeId,
                 Message =
-                    $"The time markings of date {deletedMarking.Timestamp} has been successfully deleted."
+                    $"The time markings of date {deletedMarking.RecordedAt} has been successfully deleted."
             };
             return response;
         }
 
-        public async Task<MarkingsResponseDto> UpdateMarkingAsync(int id)
+        public async Task<TimeRecordsResponseDto> UpdateMarkingAsync(int id)
         {
-            var updatedMarking = await appDbContext.Markings.FindAsync(id);
+            var updatedMarking = await appDbContext.TimeRecords.FindAsync(id);
             if (updatedMarking == null)
             {
                 throw new NotFoundException(404, "It's not possible to update a non-existing time!");
             }
             
-            updatedMarking.Timestamp = DateTime.UtcNow;
+            updatedMarking.RecordedAt = DateTime.UtcNow;
             await appDbContext.SaveChangesAsync();
-            var response = new MarkingsResponseDto()
+            var response = new TimeRecordsResponseDto()
             {
                 Id = updatedMarking.Id,
-                UserId = updatedMarking.UserId,
-                Timestamp = updatedMarking.Timestamp,
+                UserId = updatedMarking.EmployeeId,
+                RecordedAt = updatedMarking.RecordedAt,
             };
             return response;
         }

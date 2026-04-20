@@ -10,24 +10,22 @@ namespace TimeRecord.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Users> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Marking> Markings { get; set; }
-        public DbSet<Company> Companies { get; set; } 
+        public DbSet<TimeRecords> TimeRecords { get; set; }
+        public DbSet<Companies> Companies { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Employee)
-                .WithOne(e => e.User)
-                .HasForeignKey<Employee>(e => e.UserId);
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.Matriculation)
+                .IsUnique();
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Company)
-                .WithOne(c => c.User)
-                .HasForeignKey<Company>(c => c.UserId);
+            modelBuilder.Entity<Users>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
 
     }

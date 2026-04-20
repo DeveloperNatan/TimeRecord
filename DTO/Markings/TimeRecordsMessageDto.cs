@@ -1,6 +1,6 @@
 namespace TimeRecord.DTO.Markings
 {
-    public class MarkingMessageDto
+    public class TimeRecordsMessageDto
     {
         public int StatusCode { get; set; }
         public int UserId { get; set; }

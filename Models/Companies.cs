@@ -4,11 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace TimeRecord.Models
 {
-    public class Company
+    public class Companies
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonIgnore]
         public int Id { get; set; }
 
         [Required]
@@ -16,13 +15,15 @@ namespace TimeRecord.Models
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [Required] 
-        public bool IsActive { get; set; }
+        [Required] public bool IsActive { get; set; } = true;
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        
-        public int UserId { get; set; }
-        public User User { get; set; }
+        [Required] public int UserId { get; set; }
+
+        [ForeignKey((nameof(UserId)))]
+        [JsonIgnore]
+        public Users Users { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

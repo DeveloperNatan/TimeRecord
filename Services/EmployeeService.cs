@@ -121,7 +121,7 @@ namespace TimeRecord.Services
             };
         }
 
-        public async Task<IEnumerable<MarkingsResponseDto>> GetMarkingUserAsync(int id)
+        public async Task<IEnumerable<TimeRecordsResponseDto>> GetMarkingUserAsync(int id)
         {
             var markingsEmployee = await appDbContext.Employees.FindAsync(id);
             if (markingsEmployee == null)
@@ -130,7 +130,7 @@ namespace TimeRecord.Services
             }
 
             var markings = await appDbContext
-                .Markings.Where(m => m.UserId == id)
+                .TimeRecords.Where(m => m.EmployeeId == id)
                 .ToListAsync();
 
             if (markings.Count == 0)
@@ -138,10 +138,10 @@ namespace TimeRecord.Services
                 throw new KeyNotFoundException("No time markings found for this employee!");
             }
 
-            var response = markings.Select(employeeMarking => new MarkingsResponseDto()
+            var response = markings.Select(employeeMarking => new TimeRecordsResponseDto()
             {
-                UserId = employeeMarking.UserId,
-                Timestamp = employeeMarking.Timestamp,
+                UserId = employeeMarking.EmployeeId,
+                RecordedAt = employeeMarking.RecordedAt,
             });
 
             return response;

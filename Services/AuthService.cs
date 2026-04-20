@@ -31,7 +31,7 @@ public class AuthService(AppDbContext appDbContext)
             throw new UnauthorizedAccessException("Password incorrect!");
         }
 
-        var user = new User
+        var user = new Users
         {
             Id = userDb.Id,
             Email = userDb.Email,
@@ -48,7 +48,7 @@ public class AuthService(AppDbContext appDbContext)
             ExpiresIn = (int)(expiresUtc - DateTime.UtcNow).TotalSeconds,
         };
     }
-    private (string Token, DateTime ExpiresUtc) GetToken(User user)
+    private (string Token, DateTime ExpiresUtc) GetToken(Users users)
     {
         var handler = new JwtSecurityTokenHandler();
 
@@ -62,18 +62,18 @@ public class AuthService(AppDbContext appDbContext)
         {
             SigningCredentials = credentials,
             Expires = expires,
-            Subject = GenerateClaims(user)
+            Subject = GenerateClaims(users)
         };
 
         var token = handler.CreateToken(tokenDescriptor);
         return (handler.WriteToken(token), expires);
     }
 
-    private ClaimsIdentity GenerateClaims(User user)
+    private ClaimsIdentity GenerateClaims(Users users)
     {
         var ci = new ClaimsIdentity("token");
-        ci.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-        ci.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+        ci.AddClaim(new Claim(ClaimTypes.NameIdentifier, users.Id.ToString()));
+        ci.AddClaim(new Claim(ClaimTypes.Email, users.Email));
 
         return ci;
     }
@@ -90,7 +90,7 @@ public class AuthService(AppDbContext appDbContext)
 
         dataDto.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dataDto.PasswordHash);
 
-        var createdEmail = new User()
+        var createdEmail = new Users()
         {
             Email = dataDto.Email,
             PasswordHash = dataDto.PasswordHash,
@@ -110,7 +110,7 @@ public class AuthService(AppDbContext appDbContext)
         return response;
     }
 
-    public async Task<IEnumerable<User>> GetUserAsync()
+    public async Task<IEnumerable<Users>> GetUserAsync()
     {
        var allUsers =  await appDbContext.Users.ToListAsync();
        return allUsers;

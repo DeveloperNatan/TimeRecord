@@ -6,9 +6,9 @@ namespace TimeRecord.Validation
 {
     public static class MarkingValidator
     {
-        public static void Validate(Marking marking)
+        public static void Validate(TimeRecords timeRecords)
         {
-            if (marking.UserId <= 0)
+            if (timeRecords.EmployeeId <= 0)
             {
                 throw new ValidationException("Employee ID not found in the system!");
             }

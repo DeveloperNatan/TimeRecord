@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TimeRecord.Models
 {
@@ -18,8 +19,19 @@ namespace TimeRecord.Models
         [MinLength(2)]
         [MaxLength(100)]
         public string Job { get; set; }
-        
-        public int UserId { get; set; }
-        public User User { get; set; }
+
+        [Required] public string Matriculation { get; set; }
+
+        [Required] public int UserId { get; set; }
+
+        [ForeignKey((nameof(UserId)))]
+        [JsonIgnore]
+        public Users Users { get; set; }
+
+        public int CompanyId { get; set; }
+
+        [ForeignKey((nameof(CompanyId)))]
+        [JsonIgnore]
+        public Companies Companies { get; set; }
     }
 }
