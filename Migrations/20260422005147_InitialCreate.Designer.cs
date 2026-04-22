@@ -12,8 +12,8 @@ using TimeRecord.Data;
 namespace TimeRecord.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260420193506_initial_migrate")]
-    partial class initial_migrate
+    [Migration("20260422005147_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,9 +73,8 @@ namespace TimeRecord.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Matriculation")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Matriculation")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -114,17 +113,13 @@ namespace TimeRecord.Migrations
                     b.Property<DateTime>("RecordedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Markings");
+                    b.ToTable("TimeRecords");
                 });
 
             modelBuilder.Entity("TimeRecord.Models.Users", b =>

@@ -4,7 +4,7 @@ namespace TimeRecord.DTO.Markings
 {
     public class TimeRecordsCreateDto
     {
-        public int UsedId { get; set; }
+        public int Matriculation { get; set; }
         
     }
 }

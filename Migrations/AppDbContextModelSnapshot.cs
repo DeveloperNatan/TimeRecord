@@ -70,9 +70,8 @@ namespace TimeRecord.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Matriculation")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Matriculation")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -110,10 +109,6 @@ namespace TimeRecord.Migrations
 
                     b.Property<DateTime>("RecordedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("type")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

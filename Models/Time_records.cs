@@ -18,8 +18,6 @@ namespace TimeRecord.Models
         [ForeignKey(nameof(CompanyId))]
         [JsonIgnore]
         public Companies Companies { get; set; }
-
-        [Required] public string type { get; set; }
         public DateTime RecordedAt { get; set; } = DateTime.UtcNow;
     }
 }

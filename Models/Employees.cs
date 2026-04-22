@@ -20,7 +20,7 @@ namespace TimeRecord.Models
         [MaxLength(100)]
         public string Job { get; set; }
 
-        [Required] public string Matriculation { get; set; }
+        [Required] public int Matriculation { get; set; }
 
         [Required] public int UserId { get; set; }
 

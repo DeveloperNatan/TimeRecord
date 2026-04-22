@@ -12,16 +12,20 @@ namespace TimeRecord.Services
     {
         public async Task<TimeRecordsResponseDto> CreateMarkingAsync(TimeRecordsCreateDto dataDto)
         {
-            var employee = await appDbContext.Employees.FindAsync(dataDto.UsedId);
+            Console.WriteLine($"Matriculation recebida: {dataDto.Matriculation}");
+            var employee = await appDbContext.Employees
+                .FirstOrDefaultAsync(e => e.Matriculation == dataDto.Matriculation);
+            Console.WriteLine(employee);
             if (employee == null)
             {
-                throw new NotFoundException(404, "Employee ID not found in the system!");
+                throw new NotFoundException(404, "Matriculation not found in the system!");
             }
 
             //save data
             var marking = new TimeRecords()
             {
-                EmployeeId = dataDto.UsedId,
+                EmployeeId = employee.Id,
+                CompanyId = employee.CompanyId,
                 RecordedAt = DateTime.UtcNow,
             };
 

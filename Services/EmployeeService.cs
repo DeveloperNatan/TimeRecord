@@ -17,7 +17,7 @@ namespace TimeRecord.Services
             var userExists = await appDbContext.Users.AnyAsync(u => u.Id == userId);
             if(!userExists)
             {
-                throw new NotFoundException(404, "UserId not exist");
+                throw new NotFoundException(404, "Matriculation not exist");
             }
             var exisingEmployee = await appDbContext.Employees.AnyAsync(e => e.Name == dataDto.Name);
 
@@ -51,7 +51,7 @@ namespace TimeRecord.Services
             var employees = await appDbContext.Employees.ToListAsync();
             if (!employees.Any())
             {
-                throw new NotFoundException(404, "Employee ID not found in the system!");
+                throw new NotFoundException(404, "Matriculation not found in the system!");
             }
 
             var response = employees.Select(employee => new EmployeeResponseDto()
@@ -69,7 +69,7 @@ namespace TimeRecord.Services
             var employee = await appDbContext.Employees.FindAsync(id);
             if (employee == null)
             {
-                throw new NotFoundException(404, "Employee ID not found in the system!");
+                throw new NotFoundException(404, "Matriculation not found in the system!");
             }
 
             return new EmployeeResponseDto
@@ -85,7 +85,7 @@ namespace TimeRecord.Services
             var deletedEmployee = await appDbContext.Employees.FindAsync(id);
             if (deletedEmployee == null)
             {
-                throw new NotFoundException(404, "Employee ID not found in the system!");
+                throw new NotFoundException(404, "Matriculation not found in the system!");
             }
 
             appDbContext.Remove(deletedEmployee);
@@ -106,7 +106,7 @@ namespace TimeRecord.Services
 
             if (updatedEmployee == null)
             {
-                throw new NotFoundException(404, "Employee ID not found in the system!");
+                throw new NotFoundException(404, "Matriculation not found in the system!");
             }
 
             EmployeeValidator.Validate(dataDto);
